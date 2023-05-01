@@ -2,40 +2,46 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
-class Teacher{
-    String f_name;
-    String l_name;
-    static int id = 3000;
-    String dept;
+class Teacher
+{
+    String tfname;
+    String tlname;
+    static int tid = 3000;
+    String tdept;
 
-    public Teacher(String f_name, String l_name, String dept) {
-        this.f_name = f_name;
-        this.l_name = l_name;
-        this.dept = dept;
-        id++;
+    public Teacher(String tfname, String tlname, String tdept)
+    {
+        this.tfname = tfname;
+        this.tlname = tlname;
+        this.tdept = tdept;
+        tid++;
     }
-    public void display(){
-        System.out.println("Teacher ID : "+id);
-        System.out.println("Name : "+this.f_name+" "+this.l_name);
-        System.out.println("Department : "+this.dept);
+    public void display()
+    {
+        System.out.println("Teacher ID: " + tid);
+        System.out.println("Teacher Name: " + this.tfname + " " + this.tlname);
+        System.out.println("Teacher Department: " + this.tdept);
     }
 }
-class Student{
-    String F_name;
-    String L_name;
-    static int id = 7000;
+class Student
+{
+    String sfname;
+    String slname;
+    static int sid = 7000;
     String address;
 
-    public Student(String f_name, String l_name, String address) {
-        F_name = f_name;
-        L_name = l_name;
+    public Student(String sfname, String slname, String address)
+    {
+        this.sfname = sfname;
+        this.slname = slname;
         this.address = address;
-        id++;
+        sid++;
     }
-    public void display(){
-        System.out.println("Student ID : "+id);
-        System.out.println("Name : "+this.F_name+" "+this.L_name);
-        System.out.println("Address : "+this.address);
+    public void display()
+    {
+        System.out.println("Student ID: " + sid);
+        System.out.println("Name: " + this.sfname + " " + this.slname);
+        System.out.println("Address: " + this.address);
     }
 }
 public class Main
@@ -45,8 +51,10 @@ public class Main
         Scanner sc = new Scanner(System.in);
         HashMap<String, String> stdinfo = new HashMap<>();
         HashMap<String, String> teachinfo = new HashMap<>();
+
         Student s1[] = new Student[72];
         Teacher t1[] = new Teacher[72];
+
         int index = 0;
         int index2 = 0;
         int i=0;
@@ -55,6 +63,9 @@ public class Main
         ArrayList<Integer> day = new ArrayList<Integer>();
         String email;
         String password;
+
+        boolean slogstatus = false;
+        boolean tloginstatus = false;
 
         while (true)
         {
@@ -87,8 +98,10 @@ public class Main
 
                     if (stemphashmap.containsKey(email) && stemphashmap.containsValue(password))
                     {
+                        slogstatus = true;
                         System.out.println("Login successful as student!");
-                        while(true){
+                        while(slogstatus)
+                        {
                             System.out.println("--Student Menu--");
                             System.out.println("1 - View Basic Information");
                             System.out.println("2 - Attendance");
@@ -97,9 +110,11 @@ public class Main
                             System.out.println("5 - Course Feedback");
                             System.out.println("6 - Log Out");
                             int ch2 = sc.nextInt();
-                            switch(ch2){
+                            switch(ch2)
+                            {
                                 case 1: //Basic Info
-                                    while(i<index){
+                                    while(i<index)
+                                    {
                                         s1[i].display();
                                         i++;
                                     }
@@ -113,9 +128,12 @@ public class Main
                                         j++;
                                     }
                                 case 6:
+                                    slogstatus = false;
+                                    System.out.println("Successfully logged out!");
                                     break;
-
-
+                                default:
+                                    System.out.println("Enter correct choice!");
+                                    break;
                             }
                         }
                     }
@@ -147,8 +165,10 @@ public class Main
 
                     if (ttemphashmap.containsKey(email) && ttemphashmap.containsValue(password))
                     {
+                        tloginstatus = true;
                         System.out.println("Login successful as teacher!");
-                        while (true){
+                        while (tloginstatus)
+                        {
                             System.out.println("--Teacher Menu--");
                             System.out.println("1 - View Basic Informtion");
                             System.out.println("2 - Set Attendance");
@@ -156,25 +176,32 @@ public class Main
                             System.out.println("4 - View Course Feedback");
                             System.out.println("5 - Logout");
                             int ch3 = sc.nextInt();
-                            switch (ch3){
-                                case 1: //Basic Info
-                                    while(i<index){
+                            switch (ch3)
+                            {
+                                //Basic Info
+                                case 1:
+                                    while(i<index)
+                                    {
                                         t1[i].display();
                                         i++;
                                     }
                                     break;
-                                case 2: //Attendence
+                                //Attendance
+                                case 2:
                                     System.out.println("List of Students");
-                                    while(i<index){
+                                    while(i<index)
+                                    {
                                         s1[i].display();
                                         i++;
                                     }
                                     System.out.println("----------------------------");
-                                    System.out.println("Enter Roll Number of Student You want to set Attendence for");
+                                    System.out.println("Enter Roll Number of Student You want to set Attendance for");
                                     int stdid = sc.nextInt();
                                     //Searching for ID
-                                    for(int j=0;j<index;j++){
-                                        if(stdid == s1[i].id){
+                                    for(int j=0;j<index;j++)
+                                    {
+                                        if(stdid == s1[i].sid)
+                                        {
                                             System.out.println("Date(Date should be between 13 August 2022 to 25 December 2022)");
                                             System.out.println("Enter Month(7-12)");
                                             int month1 = sc.nextInt();
@@ -193,9 +220,13 @@ public class Main
                                         else System.out.println("Invalid ID");
                                     }
                                     break;
-                                default:
+                                case 5:
+                                    tloginstatus = false;
+                                    System.out.println("Successfully logged out!");
                                     break;
-
+                                default:
+                                    System.out.println("Enter correct choice!");
+                                    break;
                             }
                         }
                     }
