@@ -5,123 +5,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
-class Teacher
+public class Main implements Serializable
 {
-    String tfname;
-    String tlname;
-    static int tid = 3000;
-    String tdept;
-    boolean t_assigned = false;
-
-    public Teacher(String tfname, String tlname, String tdept)
-    {
-        this.tfname = tfname;
-        this.tlname = tlname;
-        this.tdept = tdept;
-        tid++;
-    }
-
-    public void display()
-    {
-        System.out.println("Teacher ID: " + tid);
-        System.out.println("Teacher Name: " + this.tfname + " " + this.tlname);
-        System.out.println("Teacher Department: " + this.tdept);
-    }
-}
-
-class Attendence
-{
-    ArrayList<Course> tcrse = new ArrayList<>();
-    ArrayList<DateANDTime> time = new ArrayList<>();
-}
-
-class Student
-{
-    String sfname;
-    String slname;
-    static int sid = 7000;
-    String address;
-
-    Attendence std_attendence = new Attendence();
-
-
-    public Student(String sfname, String slname, String address)
-    {
-        this.sfname = sfname;
-        this.slname = slname;
-        this.address = address;
-        sid++;
-    }
-
-    public void display()
-    {
-        System.out.println("Student ID: " + sid);
-        System.out.println("Name: " + this.sfname + " " + this.slname);
-        System.out.println("Address: " + this.address);
-    }
-    public void display2()
-    {
-        System.out.println("Student ID: " + sid+"  Name: " + this.sfname + " " + this.slname);
-    }
-}
-
-class Course
-{
-    static int course_id = 1001;
-    String course_name;
-    int hrs;
-    boolean assigned = false;
-
-    public Course(String course_name, int hrs)
-    {
-
-        course_id++;
-        this.course_name = course_name;
-        this.hrs = hrs;
-    }
-
-    public void disp() {
-        System.out.println("Course Name: " + this.course_name + " Course ID: " + course_id + " Credit Hours: " + this.hrs);
-    }
-
-}
-class DateANDTime
-{
-    int day;
-    int month;
-    int year;
-    int hour;
-    int minute;
-
-    DateANDTime()
-    {
-        LocalDate currentDate = LocalDate.now();
-        LocalTime currentTime = LocalTime.now();
-
-        this.day = currentDate.getDayOfMonth();
-        this.month = currentDate.getMonthValue();
-        this.year = currentDate.getYear();
-        this.hour = currentTime.getHour();
-        this.minute = currentTime.getMinute();
-    }
-}
-
-public class Main
-{
-
     public static void main(String[] args)
     {
+        File sfile = new File("C://Users//offic//IdeaProjects//Mini-Flex//src//studentinfo.ser");
+        try
+        {
+            sfile.createNewFile();
+        }
+        catch (IOException e)
+        {
+            System.out.println(e);
+        }
         Scanner sc = new Scanner(System.in);
-        HashMap<String, String> stdinfo = new HashMap<>();
-        HashMap<String, String> teachinfo = new HashMap<>();
 
-        ArrayList<Student> s1 = new ArrayList<Student>();
-        ArrayList<Teacher> t1 = new ArrayList<Teacher>();
-        ArrayList<Course> c1 = new ArrayList<Course>();
+        ArrayList<Student> std_arry = new ArrayList<Student>();
+        ArrayList<Teacher> tch_arry = new ArrayList<Teacher>();
+        ArrayList<Course> createdCourses = new ArrayList<Course>();
 
-
-        int index = 0;
-        int index2 = 0;
         int i = 0;
 
         String email;
@@ -130,7 +32,8 @@ public class Main
         boolean slogstatus = false;
         boolean tloginstatus = false;
 
-        while (true) {
+        while (true)
+        {
             System.out.println("---MAIN MENU---\n");
             System.out.print("1 - Login as student\n2 - Login as teacher\n3 - Login as admin\n4 - Feedback\n5 - Exit\nEnter choice: ");
             int choice = sc.nextInt();
@@ -144,71 +47,81 @@ public class Main
                     System.out.print("Enter your password: ");
                     password = sc.next();
 
-                    HashMap<String, String> stemphashmap = new HashMap<>();
-
-                    try {
-                        ObjectInputStream r = new ObjectInputStream(new FileInputStream("stdlogininfo.txt"));
-                        stemphashmap = (HashMap<String, String>) r.readObject();
-                        r.close();
-                    } catch (IOException | ClassNotFoundException e) {
-                        System.out.println("Failed to open/find file!");
-//                        System.out.println(e);
-                    }
-
-                    if (stemphashmap.containsKey(email) && stemphashmap.containsValue(password)) {
-                        slogstatus = true;
-                        System.out.println("Login successful as student!");
-                        while (slogstatus) {
-                            System.out.println("--Student Menu--");
-                            System.out.println("1 - View Basic Information");
-                            System.out.println("2 - View Attendance");
-                            System.out.println("3 - View Marks");
-                            System.out.println("4 - GPA");
-                            System.out.println("5 - Course Feedback");
-                            System.out.println("6 - Log Out");
-                            int ch2 = sc.nextInt();
-                            switch (ch2) {
-                                case 1: //Basic Info
-                                    for (int z = 0; z < s1.size(); z++) {
-                                        Student std = s1.get(z);
-                                        std.display();
-                                    }
-                                case 2:
-                                    // View Attendence
-                                    boolean attflag = false;
-                                    for(int m=0; m<c1.size();m++)
+                    try
+                    {
+                        FileInputStream fis = new FileInputStream(sfile);
+                        ObjectInputStream ois = new ObjectInputStream(fis);
+                        ArrayList<Student> tmpstds = (ArrayList<Student>) ois.readObject();
+                        ois.close();
+//                        fis.close();
+                        for (int b=0; b<tmpstds.size();i++)
+                        {
+                            if (email.equalsIgnoreCase(tmpstds.get(b).getEmail()) && password.equals(tmpstds.get(b).getPassword()))
+                            {
+                                slogstatus = true;
+                                System.out.println("Login successful as student!");
+                                while (slogstatus)
+                                {
+                                    System.out.println("--Student Menu--");
+                                    System.out.println("1 - View Basic Information");
+                                    System.out.println("2 - View Attendance");
+                                    System.out.println("3 - View Marks");
+                                    System.out.println("4 - GPA");
+                                    System.out.println("5 - Course Feedback");
+                                    System.out.println("6 - Log Out");
+                                    int ch2 = sc.nextInt();
+                                    switch (ch2)
                                     {
-                                        if(attflag==true)
-                                        {
-                                            break;
-                                        }
-                                        System.out.println("Enter course name to view attendance of: ");
-                                        String an = sc.next();
-                                        while (!attflag)
-                                        {
-                                            if (an.equalsIgnoreCase(c1.get(m).course_name))
+                                        case 1: //Basic Info
+                                            for (int z = 0; z < std_arry.size(); z++) {
+                                                Student std = std_arry.get(z);
+                                                std.display();
+                                            }
+                                        case 2:
+                                            // View Attendence
+                                            boolean attflag = false;
+                                            for(int m=0; m<createdCourses.size();m++)
                                             {
-                                                attflag = true;
+                                                if(attflag==true)
+                                                {
+                                                    break;
+                                                }
+                                                System.out.println("Enter course name to view attendance of: ");
+                                                String an = sc.next();
+                                                while (!attflag)
+                                                {
+                                                    if (an.equalsIgnoreCase(createdCourses.get(m).course_name))
+                                                    {
+                                                        attflag = true;
 
+                                                    }
+                                                    else
+                                                    {
+                                                        System.out.println("Enter valid course name!");
+                                                        break;
+                                                    }
+                                                }
                                             }
-                                            else
-                                            {
-                                                System.out.println("Enter valid course name!");
-                                                break;
-                                            }
-                                        }
+                                        case 6:
+                                            slogstatus = false;
+                                            System.out.println("Successfully logged out!");
+                                            break;
+                                        default:
+                                            System.out.println("Enter correct choice!");
+                                            break;
                                     }
-                                case 6:
-                                    slogstatus = false;
-                                    System.out.println("Successfully logged out!");
-                                    break;
-                                default:
-                                    System.out.println("Enter correct choice!");
-                                    break;
+                                }
+                            }
+                            else
+                            {
+                                System.out.println("Login failed as student!!");
                             }
                         }
-                    } else {
-                        System.out.println("Login failed as student!!");
+                    }
+                    catch (IOException | ClassNotFoundException e)
+                    {
+                        System.out.println("Failed to open/find file of student!");
+//                        System.out.println(e);
                     }
                     break;
                 case 2:
@@ -220,19 +133,24 @@ public class Main
 
                     HashMap<String, String> ttemphashmap = new HashMap<>();
 
-                    try {
+                    try
+                    {
                         ObjectInputStream r = new ObjectInputStream(new FileInputStream("teachlogininfo.txt"));
                         ttemphashmap = (HashMap<String, String>) r.readObject();
                         r.close();
-                    } catch (IOException | ClassNotFoundException e) {
+                    }
+                    catch (IOException | ClassNotFoundException e)
+                    {
                         System.out.println("Failed to open/find file!");
 //                        System.out.println(e);
                     }
 
-                    if (ttemphashmap.containsKey(email) && ttemphashmap.containsValue(password)) {
+                    if (ttemphashmap.containsKey(email) && ttemphashmap.containsValue(password))
+                    {
                         tloginstatus = true;
                         System.out.println("Login successful as teacher!");
-                        while (tloginstatus) {
+                        while (tloginstatus)
+                        {
                             System.out.println("--Teacher Menu--");
                             System.out.println("1 - View Basic Informtion");
                             System.out.println("2 - Set Attendance");
@@ -244,65 +162,67 @@ public class Main
                             {
                                 //Basic Info
                                 case 1:
-                                    for (int z = 0; z < t1.size(); z++)
+                                    for (int z = 0; z < tch_arry.size(); z++)
                                     {
-                                        Teacher teacher = t1.get(z);
+                                        Teacher teacher = tch_arry.get(z);
                                         teacher.display();
                                     }
                                 case 2:
-                                    //Set Attendance
-                                    System.out.println("List of Students");
-                                    for (int z=0; z<s1.size(); z++)
-                                    {
-                                        Student std = s1.get(z);
-                                        std.display();
-                                    }
-                                    System.out.println("----------------------------");
-                                    System.out.println("Enter Roll Number of Student You want to set Attendance for");
-                                    int stdid = sc.nextInt();
-
-
-                                    //Searching for ID
-                                    boolean attflag = false;
-                                    for (int j = 0; j < s1.size(); j++)
-                                    {
-                                        if(attflag==true)
-                                        {
-                                            break;
-                                        }
-                                        if (stdid == Student.sid)
-                                        {
-                                            for(int m=0; m<c1.size();m++)
-                                            {
-                                                if(attflag==true)
-                                                {
-                                                    break;
-                                                }
-                                                System.out.println("Enter course name to view attendance of: ");
-                                                String an = sc.next();
-                                                while (!attflag)
-                                                {
-                                                    if (an.equalsIgnoreCase(c1.get(m).course_name))
-                                                    {
-                                                        // implementation here
-                                                        attflag = true;
-                                                        s1.get(j).std_attendence.tcrse.add(c1.get(m));
-                                                        s1.get(j).std_attendence.time.add(new DateANDTime());
-                                                    }
-                                                    else
-                                                    {
-                                                        System.out.println("Enter valid course name!");
-                                                        break;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        else
-                                        {
-                                            System.out.println("Invalid ID");
-                                        }
-                                    }
-                                    break;
+//                                    //Set Attendance
+//
+//                                    System.out.println("List of Students");
+//                                    for (int z=0; z<std_arry.size(); z++)
+//                                    {
+//                                        Student std = std_arry.get(z);
+//                                        std.display();
+//                                    }
+//                                    System.out.println("----------------------------");
+//
+//                                    System.out.println("Enter Roll Number of Student You want to set Attendance for");
+//                                    int stdid = sc.nextInt();
+//
+//                                    //Searching for ID
+//                                    boolean attflag = false;
+//                                    for (int j = 0; j < std_arry.size(); j++)
+//                                    {
+//                                        if(attflag==true)
+//                                        {
+//                                            break;
+//                                        }
+//                                        if (stdid == Student.sid)
+//                                        {
+//                                            for(int m=0; m<createdCourses.size();m++)
+//                                            {
+//                                                if(attflag==true)
+//                                                {
+//                                                    break;
+//                                                }
+//
+//                                                System.out.println("Enter course name to set attendance of: ");
+//                                                String an = sc.next();
+//                                                while (!attflag)
+//                                                {
+//                                                    if (an.equalsIgnoreCase(createdCourses.get(m).course_name))
+//                                                    {
+//                                                        // implementation here
+//                                                        attflag = true;
+//                                                        std_arry.get(j).std_attendence.tcrse.add(createdCourses.get(m));
+//                                                        std_arry.get(j).std_attendence.time.add(new DateANDTime());
+//                                                    }
+//                                                    else
+//                                                    {
+//                                                        System.out.println("Enter valid course name!");
+//                                                        break;
+//                                                    }
+//                                                }
+//                                            }
+//                                        }
+//                                        else
+//                                        {
+//                                            System.out.println("Invalid ID");
+//                                        }
+//                                    }
+//                                    break;
                                 case 5:
                                     tloginstatus = false;
                                     System.out.println("Successfully logged out!");
@@ -320,59 +240,76 @@ public class Main
                     //Admin Portal
                     System.out.print("1 - Register Student\n2 - Register Teacher\n3 - Set Courses + Credit Hours\n4 - Assign Course to Teacher\n5 - Assign Courses to Student\n6 - Exit\nEnter choice: ");
                     choice = sc.nextInt();
-                    switch (choice) {
+                    switch (choice)
+                    {
                         case 1:
                             // Register Student
-
-                            System.out.println("Enter First Name of Student: ");
-                            String fname = sc.next();
-                            System.out.println("Enter Last Name of Student: ");
-                            String lname = sc.next();
-                            System.out.println("Enter Address of Student: ");
+                            System.out.println("Enter first Name of Student: ");
+                            String fname = sc.nextLine();
+                            System.out.println("Enter last Name of Student: ");
+                            String lname = sc.nextLine();
+                            System.out.println("Enter address of Student: ");
                             String address = sc.nextLine();
-                            sc.nextLine();
-                            s1.add(new Student(fname, lname, address));
                             System.out.print("Enter email for student: ");
-                            email = sc.next();
+                            email = sc.nextLine();
                             System.out.print("Enter password for student: ");
-                            password = sc.next();
-                            stdinfo.put(email, password);
-                            try {
-                                ObjectOutputStream w = new ObjectOutputStream(new FileOutputStream("stdlogininfo.txt", true));
-                                w.writeObject(stdinfo);
-                                w.close();
-                            } catch (IOException e) {
+                            password = sc.nextLine();
+                            System.out.println("Assign ID for student: ");
+                            int id = sc.nextInt();
+                            sc.nextLine();
+
+                            std_arry.add(new Student(fname, lname, email, password, id, address));
+
+                            try
+                            {
+                                FileOutputStream fos = new FileOutputStream(sfile);
+                                ObjectOutputStream oos = new ObjectOutputStream(fos);
+                                oos.writeObject(std_arry);
+                                oos.close();
+//                                fos.close();
+                                System.out.println("Successfully registered student!");
+                            }
+                            catch (IOException e)
+                            {
                                 System.out.println(e);
                             }
-                            System.out.println("Successfully registered student!");
                             break;
                         case 2:
                             // Register Teacher
-                            System.out.println("Enter First Name of Teacher");
-                            String ftname = sc.next();
-                            System.out.println("Enter Last Name of Teacher");
-                            String ltname = sc.next();
-                            System.out.println("Enter Department of Teacher");
-                            String dept = sc.nextLine();
-                            sc.nextLine();
-                            t1.add(new Teacher(ftname, ltname, dept));
+                            System.out.println("Enter First Name of teacher: ");
+                            fname = sc.next();
+                            System.out.println("Enter Last Name of teacher: ");
+                            lname = sc.next();
+                            System.out.println("Enter Address of teacher: ");
+                            address = sc.nextLine();
                             System.out.print("Enter email for teacher: ");
                             email = sc.next();
                             System.out.print("Enter password for teacher: ");
                             password = sc.next();
-                            teachinfo.put(email, password);
-                            try {
-                                ObjectOutputStream w = new ObjectOutputStream(new FileOutputStream("teachlogininfo.txt", true));
-                                w.writeObject(teachinfo);
-                                w.close();
-                            } catch (IOException e) {
+                            System.out.println("Assign ID for teacher: ");
+                            id = sc.nextInt();
+                            System.out.println("Assign department to teacher: ");
+                            String tdpt = sc.next();
+                            sc.nextLine();
+
+                            tch_arry.add(new Teacher(fname, lname, email, password, id, address, tdpt, false));
+                            try
+                            {
+                                FileOutputStream fos = new FileOutputStream("teacherinfo.ser");
+                                ObjectOutputStream oos = new ObjectOutputStream(fos);
+                                oos.writeObject(tch_arry);
+                                oos.close();
+                                System.out.println("Successfully registered teacher!");
+                            }
+                            catch (IOException e)
+                            {
                                 System.out.println(e);
                             }
-                            System.out.println("Successfully registered teacher!");
                             break;
                         case 3:
-                            //Setting Courses and credit hours respectively
-                            while (true)
+                            boolean tmp = false;
+                            // Set Courses + Credit Hours
+                            while (!tmp)
                             {
                                 System.out.println("--Courses Menu--");
                                 System.out.println("---------------------------------");
@@ -382,6 +319,7 @@ public class Main
                                 System.out.println("4 - Go Back to Main Menu");
                                 System.out.println("Enter choice: ");
                                 int opt = sc.nextInt();
+
                                 switch (opt)
                                 {
                                     case 1:
@@ -393,7 +331,7 @@ public class Main
                                             String cname = sc.next();
                                             System.out.println("Enter Credit Hours you want to assign to the Course");
                                             int hours = sc.nextInt();
-                                            c1.add(new Course(cname, hours));
+                                            createdCourses.add(new Course(cname, hours));
                                         }
                                         break;
                                     case 2:
@@ -402,12 +340,12 @@ public class Main
                                         {
                                             System.out.println("Enter Name of Course you want to delete: ");
                                             String cname = sc.next();
-                                            for (int b = 0; b < c1.size(); b++)
+                                            for (int b = 0; b < createdCourses.size(); b++)
                                             {
-                                                Course tmpcourse = c1.get(b);
+                                                Course tmpcourse = createdCourses.get(b);
                                                 if (cname.equals(tmpcourse.course_name))
                                                 {
-                                                    c1.remove(b);
+                                                    createdCourses.remove(b);
                                                     System.out.println("Course Removed Successfully");
                                                     found = true;
                                                     break;
@@ -422,13 +360,14 @@ public class Main
                                     case 3:
                                         System.out.println("--The Courses--");
                                         System.out.println("                ");
-                                        for (int z=0; z<c1.size(); z++)
+                                        for (int z=0; z<createdCourses.size(); z++)
                                         {
-                                            Course course = c1.get(z);
+                                            Course course = createdCourses.get(z);
                                             course.disp();
                                         }
                                         break;
                                     case 4:
+                                        tmp = true;
                                         // going back to previous menu
                                         break;
                                     default:
@@ -442,47 +381,50 @@ public class Main
 
                             //Checking if the Teacher Exists
                             boolean found = false;
-                            for (int b=0; b<t1.size(); b++)
+                            for (int b=0; b<tch_arry.size(); b++)
                             {
-                                System.out.println("Note: Teacher can teach only one course!");
-                                System.out.println("Enter first name of Teacher: ");
-                                String t_name = sc.next();
-                                Teacher t2 = t1.get(b);
+                                System.out.println("Note: Only one course can be assigned to the teacher!");
+                                System.out.println("Enter email of Teacher: ");
+                                String t_email = sc.next();
+                                Teacher tmptch = tch_arry.get(b);
                                 while (!found)
                                 {
-                                    if (t_name.equals(t2.tfname))
+                                    if (t_email.equals(tch_arry.get(i).getEmail()))
                                     {
                                         found = true;
                                         System.out.println("Teacher Details:");
-                                        t2.display();
+                                        tmptch.display();
 
-                                        if (t2.t_assigned == false)
+                                        if (tmptch.tcourse_assigned == false)
                                         {
-                                            System.out.println("Course List");
-                                            for (int z=0; z<c1.size(); z++)
+                                            System.out.println("---- Course List ----");
+                                            for (int z=0; z<createdCourses.size(); z++)
                                             {
-                                                Course course = c1.get(z);
-                                                System.out.println(course.course_name);
+                                                Course tmpcrse = createdCourses.get(z);
+                                                System.out.println(tmpcrse.course_name);
                                             }
                                             System.out.println("------------------");
                                             System.out.println("Select Any One Course from The Available Courses: ");
                                             String coursename = sc.next();
 
                                             boolean found1 = false;
-                                            for (int s = 0; s < c1.size(); s++)
+                                            for (int s = 0; s < createdCourses.size(); s++)
                                             {
-                                                Course course = c1.get(s);
+                                                Course course = createdCourses.get(s);
                                                 if (coursename.equals(course.course_name))
                                                 {
                                                     course.assigned = true;
-                                                    t2.t_assigned = true;
+                                                    tmptch.tcourse_assigned = true;
                                                     found1 = true;
                                                     break;
                                                 }
                                             }
-                                            if (found1) {
+                                            if (found1)
+                                            {
                                                 System.out.println("Course Assigned Successfully");
-                                            } else {
+                                            }
+                                            else
+                                            {
                                                 System.out.println("Course Name Invalid or Course not Available at the moment");
                                             }
                                         }
@@ -500,56 +442,55 @@ public class Main
                             }
                             break;
                         case 5:
-                            //Assigning Courses to Students
-                            System.out.println("Note: The Max Credit Hour Limit is 10");
-                            int totalhrs = 0;
-                            System.out.println("--------------------------------");
-                            System.out.println("Student List -->>");
-                            for (int z = 0; z < s1.size(); z++) {
-                                Student std = s1.get(z);
-                                std.display();
-                            }
-                            System.out.println("-----------------------");
-                            System.out.println("Enter ID of student you want to Assign the Courses");
-                            int std_id = sc.nextInt();
-                            //Checking if Student exists
-                            boolean f1 = false;
-                            for (int z = 0; z < s1.size(); z++) {
-                                Student s5 = s1.get(z);
-                                if (std_id == Student.sid) {
-                                    f1 = true;
-                                    System.out.println("Student Details");
-                                    s5.display2();
-                                    System.out.println("------The Course List--------");
-                                    for (int y = 0; y < c1.size(); y++) {
-                                        Course course = c1.get(y);
-                                        System.out.println(course.course_name+"  "+course.hrs);
-                                    }
-                                    while (totalhrs <10) {
-                                        System.out.println("Assign Course to the Student from the Course List");
-                                        String course_title = sc.next();
-                                        boolean found22 = false;
-                                        for (int s = 0; s < c1.size(); s++) {
-                                            Course course = c1.get(s);
-                                            if (course_title.equals(course.course_name)) {
-                                                course.assigned = true;
-                                                totalhrs += course.hrs;
-                                                found22 = true;
-                                                break;
-                                            }
-                                        }
-                                        if (found22)
-                                            System.out.println("Course Assigned Successfully");
-                                        else System.out.println("Course Name Invalid or Course not Found");
-                                    } if(totalhrs == 10) System.out.println("Max Credit Hour Limit(10) Reached");
-                                    else System.out.println("Select More Courses until the Max Credit Hour Limit is reached");
-
-                                }
-                            }
-                            if (!f1)
-                                System.out.println("Student not Registered or not found");
-
-                            break;
+//                            //Assigning Courses to Students
+//                            System.out.println("Note: The Max Credit Hour Limit is 10");
+//                            int totalhrs = 0;
+//                            System.out.println("--------------------------------");
+//                            System.out.println("Student List -->>");
+//                            for (int z = 0; z < std_arry.size(); z++) {
+//                                Student std = std_arry.get(z);
+//                                std.display();
+//                            }
+//                            System.out.println("-----------------------");
+//                            System.out.println("Enter ID of student you want to Assign the Courses");
+//                            int std_id = sc.nextInt();
+//                            //Checking if Student exists
+//                            boolean f1 = false;
+//                            for (int z = 0; z < std_arry.size(); z++) {
+//                                Student s5 = std_arry.get(z);
+//                                if (std_id == Student.sid) {
+//                                    f1 = true;
+//                                    System.out.println("Student Details");
+//                                    s5.display2();
+//                                    System.out.println("------The Course List--------");
+//                                    for (int y = 0; y < createdCourses.size(); y++) {
+//                                        Course course = createdCourses.get(y);
+//                                        System.out.println(course.course_name+"  "+course.hrs);
+//                                    }
+//                                    while (totalhrs <10) {
+//                                        System.out.println("Assign Course to the Student from the Course List");
+//                                        String course_title = sc.next();
+//                                        boolean found22 = false;
+//                                        for (int s = 0; s < createdCourses.size(); s++) {
+//                                            Course course = createdCourses.get(s);
+//                                            if (course_title.equals(course.course_name)) {
+//                                                course.assigned = true;
+//                                                totalhrs += course.hrs;
+//                                                found22 = true;
+//                                                break;
+//                                            }
+//                                        }
+//                                        if (found22)
+//                                            System.out.println("Course Assigned Successfully");
+//                                        else System.out.println("Course Name Invalid or Course not Found");
+//                                    } if(totalhrs == 10) System.out.println("Max Credit Hour Limit(10) Reached");
+//                                    else System.out.println("Select More Courses until the Max Credit Hour Limit is reached");
+//
+//                                }
+//                            }
+//                            if (!f1)
+//                                System.out.println("Student not Registered or not found");
+//                            break;
                         case 6:
                             System.out.println("Exiting out of program...");
                             System.exit(0);
