@@ -1,4 +1,6 @@
-abstract class BasicInfo
+import java.io.Serializable;
+
+abstract class BasicInfo implements Serializable
 {
     private String fname;
     private String lname;

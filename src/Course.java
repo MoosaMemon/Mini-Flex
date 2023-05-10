@@ -1,4 +1,6 @@
-class Course {
+import java.io.Serializable;
+
+class Course implements Serializable {
     static int course_id = 1001;
     String course_name;
     int hrs;

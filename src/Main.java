@@ -7,17 +7,11 @@ import java.util.Scanner;
 
 public class Main implements Serializable
 {
-    public static void main(String[] args)
+    public static void main(String[] args) throws IOException, ClassNotFoundException
     {
-        File sfile = new File("C://Users//offic//IdeaProjects//Mini-Flex//src//studentinfo.ser");
-        try
-        {
-            sfile.createNewFile();
-        }
-        catch (IOException e)
-        {
-            System.out.println(e);
-        }
+        File sfile = new File("std_login_info.ser");
+        File tfile = new File("tch_login_info.ser");
+
         Scanner sc = new Scanner(System.in);
 
         ArrayList<Student> std_arry = new ArrayList<Student>();
@@ -41,22 +35,22 @@ public class Main implements Serializable
             switch (choice)
             {
                 case 1:
-                    // Student Login
+                    // STUDENT LOGIN
                     System.out.print("Enter your email: ");
                     email = sc.next();
                     System.out.print("Enter your password: ");
                     password = sc.next();
 
-                    try
+                    FileInputStream sfis = new FileInputStream(sfile);
+                    ObjectInputStream sois = new ObjectInputStream(sfis);
+                    ArrayList<Student> tmpstds = (ArrayList<Student>) sois.readObject();
+                    sois.close();
+
+                    for (int b=0; b<tmpstds.size(); b++)
                     {
-                        FileInputStream fis = new FileInputStream(sfile);
-                        ObjectInputStream ois = new ObjectInputStream(fis);
-                        ArrayList<Student> tmpstds = (ArrayList<Student>) ois.readObject();
-                        ois.close();
-//                        fis.close();
-                        for (int b=0; b<tmpstds.size();i++)
+                        if ( email.equalsIgnoreCase(tmpstds.get(b).getEmail()) )
                         {
-                            if (email.equalsIgnoreCase(tmpstds.get(b).getEmail()) && password.equals(tmpstds.get(b).getPassword()))
+                            if(password.equals(tmpstds.get(b).getPassword()))
                             {
                                 slogstatus = true;
                                 System.out.println("Login successful as student!");
@@ -73,10 +67,12 @@ public class Main implements Serializable
                                     switch (ch2)
                                     {
                                         case 1: //Basic Info
-                                            for (int z = 0; z < std_arry.size(); z++) {
+                                            for (int z = 0; z < std_arry.size(); z++)
+                                            {
                                                 Student std = std_arry.get(z);
                                                 std.display();
                                             }
+                                            break;
                                         case 2:
                                             // View Attendence
                                             boolean attflag = false;
@@ -111,63 +107,54 @@ public class Main implements Serializable
                                             break;
                                     }
                                 }
-                            }
-                            else
-                            {
-                                System.out.println("Login failed as student!!");
+                                if(slogstatus==false)
+                                {
+                                    break;
+                                }
                             }
                         }
                     }
-                    catch (IOException | ClassNotFoundException e)
-                    {
-                        System.out.println("Failed to open/find file of student!");
-//                        System.out.println(e);
-                    }
+                    tmpstds = null;
                     break;
                 case 2:
-                    // Teacher login
+                    // TEACHER LOGIN
                     System.out.print("Enter your email: ");
                     email = sc.next();
                     System.out.print("Enter your password: ");
                     password = sc.next();
 
-                    HashMap<String, String> ttemphashmap = new HashMap<>();
+                    FileInputStream tfis = new FileInputStream(sfile);
+                    ObjectInputStream tois = new ObjectInputStream(tfis);
+                    ArrayList<Teacher> tmptchs = (ArrayList<Teacher>) tois.readObject();
+                    tois.close();
 
-                    try
+                    for(int d=0;d< tch_arry.size();d++)
                     {
-                        ObjectInputStream r = new ObjectInputStream(new FileInputStream("teachlogininfo.txt"));
-                        ttemphashmap = (HashMap<String, String>) r.readObject();
-                        r.close();
-                    }
-                    catch (IOException | ClassNotFoundException e)
-                    {
-                        System.out.println("Failed to open/find file!");
-//                        System.out.println(e);
-                    }
-
-                    if (ttemphashmap.containsKey(email) && ttemphashmap.containsValue(password))
-                    {
-                        tloginstatus = true;
-                        System.out.println("Login successful as teacher!");
-                        while (tloginstatus)
+                        if(email.equalsIgnoreCase(tch_arry.get(d).getEmail()))
                         {
-                            System.out.println("--Teacher Menu--");
-                            System.out.println("1 - View Basic Informtion");
-                            System.out.println("2 - Set Attendance");
-                            System.out.println("3 - Set Marks");
-                            System.out.println("4 - View Course Feedback");
-                            System.out.println("5 - Logout");
-                            int ch3 = sc.nextInt();
-                            switch (ch3)
+                            if(password.equals(tch_arry.get(d).getPassword()))
                             {
-                                //Basic Info
-                                case 1:
-                                    for (int z = 0; z < tch_arry.size(); z++)
+                                tloginstatus = true;
+                                System.out.println("Login successful as teacher!");
+                                while (tloginstatus)
+                                {
+                                    System.out.println("--Teacher Menu--");
+                                    System.out.println("1 - View Basic Informtion");
+                                    System.out.println("2 - Set Attendance");
+                                    System.out.println("3 - Set Marks");
+                                    System.out.println("4 - View Course Feedback");
+                                    System.out.println("5 - Logout");
+                                    int ch3 = sc.nextInt();
+                                    switch (ch3)
                                     {
-                                        Teacher teacher = tch_arry.get(z);
-                                        teacher.display();
-                                    }
-                                case 2:
+                                        //Basic Info
+                                        case 1:
+                                            for (int z = 0; z < tch_arry.size(); z++)
+                                            {
+                                                Teacher teacher = tch_arry.get(z);
+                                                teacher.display();
+                                            }
+                                        case 2:
 //                                    //Set Attendance
 //
 //                                    System.out.println("List of Students");
@@ -223,21 +210,25 @@ public class Main implements Serializable
 //                                        }
 //                                    }
 //                                    break;
-                                case 5:
-                                    tloginstatus = false;
-                                    System.out.println("Successfully logged out!");
+                                        case 5:
+                                            tloginstatus = false;
+                                            System.out.println("Successfully logged out!");
+                                            break;
+                                        default:
+                                            System.out.println("Enter correct choice!");
+                                            break;
+                                    }
+                                }
+                                if(tloginstatus==false)
+                                {
                                     break;
-                                default:
-                                    System.out.println("Enter correct choice!");
-                                    break;
+                                }
                             }
                         }
-                    } else {
-                        System.out.println("Login failed as teacher!!");
                     }
                     break;
                 case 3:
-                    //Admin Portal
+                    // ADMIN LOGIN
                     System.out.print("1 - Register Student\n2 - Register Teacher\n3 - Set Courses + Credit Hours\n4 - Assign Course to Teacher\n5 - Assign Courses to Student\n6 - Exit\nEnter choice: ");
                     choice = sc.nextInt();
                     switch (choice)
@@ -258,21 +249,27 @@ public class Main implements Serializable
                             int id = sc.nextInt();
                             sc.nextLine();
 
+                            if(sfile.exists())
+                            {
+                                std_arry = null;
+                                FileInputStream ssfis = new FileInputStream(sfile);
+                                ObjectInputStream ssois = new ObjectInputStream(ssfis);
+                                std_arry = (ArrayList<Student>) ssois.readObject();
+                                ssois.close();
+                            }
+                            else
+                            {
+                                System.out.println("Creating a new file");
+                                sfile.createNewFile();
+                            }
+
                             std_arry.add(new Student(fname, lname, email, password, id, address));
 
-                            try
-                            {
-                                FileOutputStream fos = new FileOutputStream(sfile);
-                                ObjectOutputStream oos = new ObjectOutputStream(fos);
-                                oos.writeObject(std_arry);
-                                oos.close();
-//                                fos.close();
-                                System.out.println("Successfully registered student!");
-                            }
-                            catch (IOException e)
-                            {
-                                System.out.println(e);
-                            }
+                            FileOutputStream sfos = new FileOutputStream(sfile);
+                            ObjectOutputStream soos = new ObjectOutputStream(sfos);
+                            soos.writeObject(std_arry);
+                            soos.close();
+                            System.out.println("Successfully registered student!");
                             break;
                         case 2:
                             // Register Teacher
@@ -292,19 +289,27 @@ public class Main implements Serializable
                             String tdpt = sc.next();
                             sc.nextLine();
 
+                            if(tfile.exists())
+                            {
+                                tch_arry = null;
+                                FileInputStream ttfis = new FileInputStream(tfile);
+                                ObjectInputStream ttois = new ObjectInputStream(ttfis);
+                                tch_arry = (ArrayList<Teacher>) ttois.readObject();
+                                ttois.close();
+                            }
+                            else
+                            {
+                                System.out.println("Creating a new file");
+                                sfile.createNewFile();
+                            }
+
                             tch_arry.add(new Teacher(fname, lname, email, password, id, address, tdpt, false));
-                            try
-                            {
-                                FileOutputStream fos = new FileOutputStream("teacherinfo.ser");
-                                ObjectOutputStream oos = new ObjectOutputStream(fos);
-                                oos.writeObject(tch_arry);
-                                oos.close();
-                                System.out.println("Successfully registered teacher!");
-                            }
-                            catch (IOException e)
-                            {
-                                System.out.println(e);
-                            }
+
+                            FileOutputStream tfos = new FileOutputStream(tfile);
+                            ObjectOutputStream toos = new ObjectOutputStream(tfos);
+                            toos.writeObject(tch_arry);
+                            toos.close();
+                            System.out.println("Successfully registered teacher!");
                             break;
                         case 3:
                             boolean tmp = false;
@@ -492,6 +497,7 @@ public class Main implements Serializable
 //                                System.out.println("Student not Registered or not found");
 //                            break;
                         case 6:
+                            // EXIT OUT OF APPLICATION
                             System.out.println("Exiting out of program...");
                             System.exit(0);
                             break;

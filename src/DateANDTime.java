@@ -1,7 +1,8 @@
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-class DateANDTime {
+class DateANDTime implements Serializable {
     int day;
     int month;
     int year;

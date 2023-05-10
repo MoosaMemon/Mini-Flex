@@ -10,7 +10,10 @@ class Student extends BasicInfo implements Serializable
     }
 
     @Override
-    void display() {
-
+    void display()
+    {
+        System.out.println("Name: " + ( this.getFname() + " " + this.getLname() ));
+        System.out.println("Email: " + this.getEmail());
+        System.out.println("ID: " + this.getID());
     }
 }
