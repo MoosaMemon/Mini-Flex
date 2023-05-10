@@ -1,20 +1,20 @@
 import java.io.Serializable;
 
-class Course implements Serializable {
-    static int course_id = 1001;
+class Course implements Serializable
+{
+    String coursecode;
     String course_name;
     int hrs;
-    boolean assigned = false;
 
-    public Course(String course_name, int hrs) {
-
-        course_id++;
+    public Course(String course_name, int hrs, String coursecode)
+    {
         this.course_name = course_name;
         this.hrs = hrs;
+        this.coursecode = coursecode;
     }
 
     public void disp() {
-        System.out.println("Course Name: " + this.course_name + " Course ID: " + course_id + " Credit Hours: " + this.hrs);
+        System.out.println("Course Name: " + this.course_name + " Course ID: " + coursecode + " Credit Hours: " + this.hrs);
     }
 
 }
