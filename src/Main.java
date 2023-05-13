@@ -7,12 +7,44 @@ public class Main implements Serializable
     public static void main(String[] args) throws IOException, ClassNotFoundException
     {
         Scanner sc = new Scanner(System.in);
-        File sfile = new File("std_login_info.ser");
-        File tfile = new File("tch_login_info.ser");
+        File sfile = new File("std_info.ser");
+        File tfile = new File("tch_info.ser");
+        File cfile = new File("crse_info.ser");
 
         ArrayList<Student> std_arry = new ArrayList<Student>();
         ArrayList<Teacher> tch_arry = new ArrayList<Teacher>();
         ArrayList<Course> createdCourses = new ArrayList<Course>();
+
+        if(sfile.exists())
+        {
+            FileInputStream sfis = new FileInputStream(sfile);
+            ObjectInputStream sois = new ObjectInputStream(sfis);
+            ArrayList<Student> tmpstds = (ArrayList<Student>) sois.readObject();
+            sois.close();
+            sfis.close();
+            std_arry = tmpstds;
+            tmpstds = null;
+        }
+        if(tfile.exists())
+        {
+            FileInputStream tfis = new FileInputStream(tfile);
+            ObjectInputStream tois = new ObjectInputStream(tfis);
+            ArrayList<Teacher> tmptchs = (ArrayList<Teacher>) tois.readObject();
+            tois.close();
+            tfis.close();
+            tch_arry = tmptchs;
+            tmptchs = null;
+        }
+        if(cfile.exists())
+        {
+            FileInputStream cfis = new FileInputStream(cfile);
+            ObjectInputStream cois = new ObjectInputStream(cfis);
+            ArrayList<Course> tmpcrs = (ArrayList<Course>) cois.readObject();
+            cois.close();
+            cfis.close();
+            createdCourses = tmpcrs;
+            tmpcrs = null;
+        }
 
         int i = 0;
 
@@ -33,16 +65,7 @@ public class Main implements Serializable
             {
                 case 1:
                     // STUDENT LOGIN
-                    if(sfile.exists())
-                    {
-                        FileInputStream sfis = new FileInputStream(sfile);
-                        ObjectInputStream sois = new ObjectInputStream(sfis);
-                        ArrayList<Student> tmpstds = (ArrayList<Student>) sois.readObject();
-                        sois.close();
-                        std_arry = tmpstds;
-                        tmpstds = null;
-                    }
-                    else
+                    if(!sfile.exists())
                     {
                         System.out.println("Failed to proceed! Register a student first.");
                         break;
@@ -85,34 +108,28 @@ public class Main implements Serializable
                                         case 2:
                                             // View Attendence
                                             boolean attflag = false;
-                                            for(int m=0; m<createdCourses.size();m++)
-                                            {
-                                                if(attflag==true)
-                                                {
-                                                    break;
-                                                }
-                                                System.out.println("Enter course name to view attendance of: ");
-                                                String an = sc.next();
-                                                while (!attflag)
-                                                {
-                                                    if (an.equalsIgnoreCase(createdCourses.get(m).course_name))
-                                                    {
-                                                        attflag = true;
+                                            sc.nextLine();
+                                            System.out.print("Enter course name to view attendance of: ");
+                                            String ch9 = sc.nextLine();
 
-                                                    }
-                                                    else
-                                                    {
-                                                        System.out.println("Enter valid course name!");
-                                                        break;
-                                                    }
+                                            System.out.println(std_arry.get(b).std_attendence.tcrse.size());
+                                            for(int g=0; g<std_arry.get(b).std_attendence.tcrse.size(); g++)
+                                            {
+                                                if(std_arry.get(b).std_attendence.tcrse.get(g).course_name.trim().equalsIgnoreCase(ch9.trim()))
+                                                {
+                                                    System.out.println("Attendance marked for: " + std_arry.get(b).std_attendence.tcrse.get(g).course_name);
+                                                    std_arry.get(b).std_attendence.time.get(g).display();
+                                                    System.out.println("\n");
                                                 }
                                             }
+                                            break;
                                         case 6:
                                             System.out.println("Saving changes before logging out...");
                                             FileOutputStream sfos = new FileOutputStream(sfile);
                                             ObjectOutputStream soos = new ObjectOutputStream(sfos);
                                             soos.writeObject(std_arry);
                                             soos.close();
+                                            sfos.close();
                                             slogstatus = false;
                                             System.out.println("Successfully logged out!!");
                                             break;
@@ -129,37 +146,12 @@ public class Main implements Serializable
                         }
                     }
                     break;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 case 2:
                     // TEACHER LOGIN
-                    if(tfile.exists())
-                    {
-                        FileInputStream tfis = new FileInputStream(tfile);
-                        ObjectInputStream tois = new ObjectInputStream(tfis);
-                        ArrayList<Teacher> tmptchs = (ArrayList<Teacher>) tois.readObject();
-                        tois.close();
-                        tch_arry = tmptchs;
-                        tmptchs = null;
-                    }
-                    else
+                    if(!tfile.exists())
                     {
                         System.out.println("Failed to proceed! Register a teacher first.");
+                        break;
                     }
 
                     System.out.print("Enter your email: ");
@@ -179,7 +171,7 @@ public class Main implements Serializable
                                 while (tloginstatus)
                                 {
                                     System.out.println("--Teacher Menu--");
-                                    System.out.println("1 - View Basic Informtion");
+                                    System.out.println("1 - View Basic Information");
                                     System.out.println("2 - Set Attendance");
                                     System.out.println("3 - Set Marks");
                                     System.out.println("4 - View Course Feedback");
@@ -195,68 +187,48 @@ public class Main implements Serializable
                                                 Teacher teacher = tch_arry.get(z);
                                                 teacher.display();
                                             }
+                                            break;
                                         case 2:
-//                                    //Set Attendance
-//
-//                                    System.out.println("List of Students");
-//                                    for (int z=0; z<std_arry.size(); z++)
-//                                    {
-//                                        Student std = std_arry.get(z);
-//                                        std.display();
-//                                    }
-//                                    System.out.println("----------------------------");
-//
-//                                    System.out.println("Enter Roll Number of Student You want to set Attendance for");
-//                                    int stdid = sc.nextInt();
-//
-//                                    //Searching for ID
-//                                    boolean attflag = false;
-//                                    for (int j = 0; j < std_arry.size(); j++)
-//                                    {
-//                                        if(attflag==true)
-//                                        {
-//                                            break;
-//                                        }
-//                                        if (stdid == Student.sid)
-//                                        {
-//                                            for(int m=0; m<createdCourses.size();m++)
-//                                            {
-//                                                if(attflag==true)
-//                                                {
-//                                                    break;
-//                                                }
-//
-//                                                System.out.println("Enter course name to set attendance of: ");
-//                                                String an = sc.next();
-//                                                while (!attflag)
-//                                                {
-//                                                    if (an.equalsIgnoreCase(createdCourses.get(m).course_name))
-//                                                    {
-//                                                        // implementation here
-//                                                        attflag = true;
-//                                                        std_arry.get(j).std_attendence.tcrse.add(createdCourses.get(m));
-//                                                        std_arry.get(j).std_attendence.time.add(new DateANDTime());
-//                                                    }
-//                                                    else
-//                                                    {
-//                                                        System.out.println("Enter valid course name!");
-//                                                        break;
-//                                                    }
-//                                                }
-//                                            }
-//                                        }
-//                                        else
-//                                        {
-//                                            System.out.println("Invalid ID");
-//                                        }
-//                                    }
-//                                    break;
+                                            //Set Attendance
+                                            System.out.print("Enter ID of student to set attendance for: ");
+                                            int stdid = sc.nextInt();
+
+                                            //Searching for ID
+                                            boolean attflag = false;
+                                            for (int j=0; j<std_arry.size(); j++)
+                                            {
+                                                if(attflag==true)
+                                                {
+                                                    break;
+                                                }
+                                                if (stdid == std_arry.get(j).getID())
+                                                {
+                                                    System.out.println("Student Found!!");
+                                                    for(int x=0; x<std_arry.get(j).CoursesToStudy.size(); x++)
+                                                    {
+                                                        if(std_arry.get(j).CoursesToStudy.get(x).course_name.equalsIgnoreCase(tch_arry.get(d).AssignedCourse.course_name))
+                                                        {
+                                                            attflag = true;
+                                                            std_arry.get(j).std_attendence.tcrse.add(tch_arry.get(d).AssignedCourse);
+                                                            std_arry.get(j).std_attendence.time.add(new CurrentDateANDTime());
+                                                            System.out.println("Attendance marked successfully!");
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    System.out.println("Invalid ID!");
+                                                }
+                                            }
+                                            break;
                                         case 5:
                                             System.out.println("Saving changes before logging out...");
                                             FileOutputStream tfos = new FileOutputStream(tfile);
                                             ObjectOutputStream toos = new ObjectOutputStream(tfos);
                                             toos.writeObject(tch_arry);
                                             toos.close();
+                                            tfos.close();
                                             tloginstatus = false;
                                             System.out.println("Successfully logged out!!");
                                             break;
@@ -273,20 +245,6 @@ public class Main implements Serializable
                         }
                     }
                     break;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 case 3:
                     // ADMIN LOGIN
                     aloginstatus = true;
@@ -310,9 +268,10 @@ public class Main implements Serializable
                                 email = sc.nextLine();
                                 System.out.print("Enter password for student: ");
                                 password = sc.nextLine();
+                                System.out.println("Enter department for student: ");
+                                String dep = sc.nextLine();
                                 System.out.print("Enter ID for student: ");
                                 int id = sc.nextInt();
-                                sc.nextLine();
 
                                 if(sfile.exists())
                                 {
@@ -321,6 +280,7 @@ public class Main implements Serializable
                                     ObjectInputStream ssois = new ObjectInputStream(ssfis);
                                     std_arry = (ArrayList<Student>) ssois.readObject();
                                     ssois.close();
+                                    ssfis.close();
                                 }
                                 else
                                 {
@@ -328,12 +288,13 @@ public class Main implements Serializable
                                     sfile.createNewFile();
                                 }
 
-                                std_arry.add(new Student(fname, lname, email, password, id, address));
+                                std_arry.add(new Student(fname, lname, email, password, id, address, dep));
 
                                 FileOutputStream sfos = new FileOutputStream(sfile);
                                 ObjectOutputStream soos = new ObjectOutputStream(sfos);
                                 soos.writeObject(std_arry);
                                 soos.close();
+                                sfos.close();
                                 System.out.println("Successfully registered student!");
                                 break;
                             case 2:
@@ -354,7 +315,6 @@ public class Main implements Serializable
                                 id = sc.nextInt();
                                 System.out.print("Enter department to teacher: ");
                                 String tdpt = sc.next();
-                                sc.nextLine();
 
                                 if(tfile.exists())
                                 {
@@ -363,6 +323,7 @@ public class Main implements Serializable
                                     ObjectInputStream ttois = new ObjectInputStream(ttfis);
                                     tch_arry = (ArrayList<Teacher>) ttois.readObject();
                                     ttois.close();
+                                    ttfis.close();
                                 }
                                 else
                                 {
@@ -376,11 +337,13 @@ public class Main implements Serializable
                                 ObjectOutputStream toos = new ObjectOutputStream(tfos);
                                 toos.writeObject(tch_arry);
                                 toos.close();
+                                tfos.close();
                                 System.out.println("Successfully registered teacher!");
                                 break;
                             case 3:
-                                // SET COURSES + CREDIT HOURS
+                                // CREATE COURSES + CREDIT HOURS
                                 boolean tmp = false;
+//                                sc.nextLine();
                                 while (!tmp)
                                 {
                                     System.out.println("--Courses Menu--");
@@ -389,44 +352,65 @@ public class Main implements Serializable
                                     System.out.println("2 - Delete Courses");
                                     System.out.println("3 - View Courses");
                                     System.out.println("4 - Go Back to Main Menu");
-                                    System.out.println("Enter choice: ");
+                                    System.out.print("Enter choice: ");
                                     int opt = sc.nextInt();
 
                                     switch (opt)
                                     {
                                         case 1:
-                                            System.out.println("How many courses you want to Add?");
-                                            int n = sc.nextInt();
-                                            for (int x = 0; x<n; x++)
+                                            sc.nextLine();
+                                            System.out.print("Enter course name: ");
+                                            String cname = sc.nextLine();
+                                            System.out.print("Enter course credit hours: ");
+                                            int hours = sc.nextInt();
+                                            sc.nextLine();
+                                            System.out.print("Enter course code: ");
+                                            String ccc = sc.nextLine();
+
+                                            if(cfile.exists())
                                             {
-                                                System.out.print("Enter course name: ");
-                                                String cname = sc.next();
-                                                System.out.print("Enter course credit hours:");
-                                                int hours = sc.nextInt();
-                                                System.out.print("Enter course code: ");
-                                                String ccc = sc.nextLine();
-                                                createdCourses.add(new Course(cname, hours, ccc));
+                                                createdCourses = null;
+                                                FileInputStream cfis = new FileInputStream(cfile);
+                                                ObjectInputStream cois = new ObjectInputStream(cfis);
+                                                createdCourses = (ArrayList<Course>) cois.readObject();
+                                                cois.close();
+                                                cfis.close();
                                             }
+                                            else
+                                            {
+                                                System.out.println("Creating a new file");
+                                                sfile.createNewFile();
+                                            }
+
+                                            createdCourses.add(new Course(cname, hours, ccc));
+
+                                            FileOutputStream cfos = new FileOutputStream(cfile);
+                                            ObjectOutputStream coos = new ObjectOutputStream(cfos);
+                                            coos.writeObject(createdCourses);
+                                            coos.close();
+                                            cfos.close();
+                                            System.out.println("Successfully registered course!");
                                             break;
                                         case 2:
+                                            sc.nextLine();
                                             boolean found = false;
                                             while (!found)
                                             {
-                                                System.out.println("Enter Name of Course you want to delete: ");
-                                                String cname = sc.next();
-                                                for (int b = 0; b < createdCourses.size(); b++)
+                                                System.out.print("Enter name of course to delete: ");
+                                                String cn = sc.next();
+                                                for (int b=0; b<createdCourses.size(); b++)
                                                 {
                                                     Course tmpcourse = createdCourses.get(b);
-                                                    if (cname.equals(tmpcourse.course_name))
+                                                    if (cn.equals(tmpcourse.course_name))
                                                     {
                                                         createdCourses.remove(b);
-                                                        System.out.println("Course Removed Successfully");
+                                                        System.out.println("Course removed successfully!!");
                                                         found = true;
                                                         break;
                                                     }
                                                     else
                                                     {
-                                                        System.out.println("Course Name Invalid or Course not found");
+                                                        System.out.println("Course name invalid/course not found!");
                                                     }
                                                 }
                                             }
@@ -437,7 +421,7 @@ public class Main implements Serializable
                                             for (int z=0; z<createdCourses.size(); z++)
                                             {
                                                 Course course = createdCourses.get(z);
-                                                course.disp();
+                                                course.display();
                                             }
                                             break;
                                         case 4:
@@ -446,19 +430,24 @@ public class Main implements Serializable
                                             break;
                                         default:
                                             System.out.println("Enter correct choice!");
-
                                     }
                                 }
-//                            break;
+                            break;
                             case 4:
+                                sc.nextLine();
                                 //Assigning Courses to Teachers
+                                if(!cfile.exists())
+                                {
+                                    System.out.println("Failed to proceed! Register a course first.");
+                                    break;
+                                }
 
                                 //Checking if the Teacher Exists
                                 boolean found = false;
                                 for (int b=0; b<tch_arry.size(); b++)
                                 {
-                                    System.out.println("Note: Only one course can be assigned to the teacher!");
-                                    System.out.println("Enter email of Teacher: ");
+                                    System.out.println("Note: only one course can be assigned to the teacher!");
+                                    System.out.print("Enter email of Teacher: ");
                                     String t_email = sc.next();
                                     Teacher tmptch = tch_arry.get(b);
                                     while (!found)
@@ -478,7 +467,7 @@ public class Main implements Serializable
                                                     System.out.println(tmpcrse.course_name);
                                                 }
                                                 System.out.println("------------------");
-                                                System.out.println("Select Any One Course from The Available Courses: ");
+                                                System.out.println("Select any one course from above: ");
                                                 String coursename = sc.next();
 
                                                 boolean found1 = false;
@@ -496,11 +485,11 @@ public class Main implements Serializable
                                                 }
                                                 if (found1)
                                                 {
-                                                    System.out.println("Course Assigned Successfully");
+                                                    System.out.println("Course assigned successfully");
                                                 }
                                                 else
                                                 {
-                                                    System.out.println("Course Name Invalid or Course not Available at the moment");
+                                                    System.out.println("Course name invalid/course not available at the moment");
                                                 }
                                             }
                                             else
@@ -510,18 +499,25 @@ public class Main implements Serializable
                                         }
                                         else
                                         {
-                                            System.out.println("Teacher not Registered or not Found");
+                                            System.out.println("Teacher not registered/not found");
                                             break;
                                         }
                                     }
                                 }
                                 break;
                             case 5:
+                                sc.nextLine();
+                                if(!cfile.exists())
+                                {
+                                    System.out.println("Failed to proceed! Register a course first.");
+                                    break;
+                                }
+
                                 //Assigning Courses to Students
                                 System.out.println("Note: The Max Credit Hour Limit is 10");
                                 int totalhrs = 0;
                                 System.out.println("-----------------------");
-                                System.out.println("Enter email of student to assign course: ");
+                                System.out.print("Enter email of student to assign course: ");
                                 String std_email = sc.next();
 
                                 //Checking if Student exists
@@ -538,11 +534,11 @@ public class Main implements Serializable
                                         for (int y=0; y<createdCourses.size(); y++)
                                         {
                                             Course course = createdCourses.get(y);
-                                            System.out.println(course.course_name+"  "+course.hrs);
+                                            course.display();
                                         }
                                         while (totalhrs <10)
                                         {
-                                            System.out.println("Assign Course to the Student from the Course List");
+                                            System.out.print("Select a course from above: ");
                                             String course_title = sc.next();
                                             boolean found22 = false;
                                             for (int s = 0; s < createdCourses.size(); s++)
@@ -558,11 +554,11 @@ public class Main implements Serializable
                                             }
                                             if (found22)
                                             {
-                                                System.out.println("Course Assigned Successfully");
+                                                System.out.println("Course assigned successfully");
                                             }
                                             else
                                             {
-                                                System.out.println("Invalid course name/Course not found");
+                                                System.out.println("Invalid course name/course not found");
                                             }
                                         }
                                         if(totalhrs == 10)
@@ -581,8 +577,31 @@ public class Main implements Serializable
                                 }
                                 break;
                             case 6:
+                                System.out.println("Saving changes before logging out...");
+
+                                // saving changes made to students
+                                FileOutputStream sfoss = new FileOutputStream(sfile);
+                                ObjectOutputStream sooss = new ObjectOutputStream(sfoss);
+                                sooss.writeObject(std_arry);
+                                sooss.close();
+                                sfoss.close();
+
+                                //saving changes made to teachers
+                                FileOutputStream tfoss = new FileOutputStream(tfile);
+                                ObjectOutputStream tooss = new ObjectOutputStream(tfoss);
+                                tooss.writeObject(tch_arry);
+                                tooss.close();
+                                tfoss.close();
+
+                                // saving changes made to courses
+                                FileOutputStream cfos = new FileOutputStream(cfile);
+                                ObjectOutputStream coos = new ObjectOutputStream(cfos);
+                                coos.writeObject(createdCourses);
+                                coos.close();
+                                cfos.close();
+
                                 aloginstatus=false;
-                                System.out.println("Logging out...");
+                                System.out.println("Successfully logged out");
                                 break;
                             default:
                                 System.out.println("Enter correct option!");

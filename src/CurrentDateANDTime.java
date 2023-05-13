@@ -2,14 +2,15 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-class DateANDTime implements Serializable {
+class CurrentDateANDTime implements Serializable {
     int day;
     int month;
     int year;
     int hour;
     int minute;
 
-    DateANDTime() {
+    CurrentDateANDTime()
+    {
         LocalDate currentDate = LocalDate.now();
         LocalTime currentTime = LocalTime.now();
 
@@ -19,4 +20,11 @@ class DateANDTime implements Serializable {
         this.hour = currentTime.getHour();
         this.minute = currentTime.getMinute();
     }
+    void display()
+    {
+        System.out.println("DATE: " + (day + "/" + month + "/" + year));
+        System.out.println("TIME: " + (this.hour + ":" + this.minute));
+
+    }
+
 }

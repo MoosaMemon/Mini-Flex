@@ -6,16 +6,17 @@ class Student extends BasicInfo implements Serializable
     Attendence std_attendence = new Attendence();
     ArrayList<Course> CoursesToStudy = new ArrayList<>();
 
-    public Student(String fname, String lname, String email, String password, int ID, String address)
+    public Student(String fname, String lname, String email, String password, int ID, String address, String dept)
     {
-        super(fname, lname, email, password, ID, address);
+        super(fname, lname, email, password, ID, address, dept);
     }
 
     @Override
     void display()
     {
-        System.out.println("Name: " + ( this.getFname() + " " + this.getLname() ));
-        System.out.println("Email: " + this.getEmail());
-        System.out.println("ID: " + this.getID());
+        System.out.println("Name: " + ( super.getFname() + " " + super.getLname() ));
+        System.out.println("Email: " + super.getEmail());
+        System.out.println("ID: " + super.getID());
+        System.out.println("Student department: " + super.getDept());
     }
 }

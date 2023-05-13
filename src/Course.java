@@ -13,8 +13,11 @@ class Course implements Serializable
         this.coursecode = coursecode;
     }
 
-    public void disp() {
-        System.out.println("Course Name: " + this.course_name + " Course ID: " + coursecode + " Credit Hours: " + this.hrs);
+    public void display()
+    {
+        System.out.println("Course name: " + this.course_name);
+        System.out.println("Course code: " + this.coursecode);
+        System.out.println("Credit hours: " + this.hrs);
     }
 
 }

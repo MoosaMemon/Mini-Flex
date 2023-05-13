@@ -8,8 +8,9 @@ abstract class BasicInfo implements Serializable
     private String password;
     protected int ID;
     private String address;
+    private String dept;
 
-    public BasicInfo(String fname, String lname, String email, String password, int ID, String address)
+    public BasicInfo(String fname, String lname, String email, String password, int ID, String address, String dept)
     {
         this.fname = fname;
         this.lname = lname;
@@ -17,6 +18,7 @@ abstract class BasicInfo implements Serializable
         this.password = password;
         this.ID = ID;
         this.address = address;
+        this.dept = dept;
     }
     abstract void display();
 
@@ -44,6 +46,10 @@ abstract class BasicInfo implements Serializable
 
     public String getAddress() {
         return address;
+    }
+    public String getDept()
+    {
+        return dept;
     }
 
 }
