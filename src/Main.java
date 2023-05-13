@@ -58,7 +58,7 @@ public class Main implements Serializable
         while (true)
         {
             System.out.println("---MAIN MENU---\n");
-            System.out.print("1 - Login as student\n2 - Login as teacher\n3 - Login as admin\n4 - Feedback\n5 - Exit\nEnter choice: ");
+            System.out.print("1 - Login as student\n2 - Login as teacher\n3 - Login as admin\n4 - Exit\nEnter choice: ");
             int choice = sc.nextInt();
 
             switch (choice)
@@ -608,7 +608,7 @@ public class Main implements Serializable
                         }
                     }
                     break;
-                case 5:
+                case 4:
                     // EXIT OUT OF APPLICATION
                     System.out.println("Exiting out of program...");
                     System.exit(0);
