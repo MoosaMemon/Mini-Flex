@@ -14,6 +14,8 @@ public class Main implements Serializable
         ArrayList<Student> std_arry = new ArrayList<Student>();
         ArrayList<Teacher> tch_arry = new ArrayList<Teacher>();
         ArrayList<Course> createdCourses = new ArrayList<Course>();
+        ArrayList<GPA>   coursemarks = new ArrayList<>();
+        Teacher tmptch = null;
 
         if(sfile.exists())
         {
@@ -123,6 +125,11 @@ public class Main implements Serializable
                                                 }
                                             }
                                             break;
+                                        case 3:
+                                            System.out.println("-----Marks------");
+                                            break;
+
+
                                         case 6:
                                             System.out.println("Saving changes before logging out...");
                                             FileOutputStream sfos = new FileOutputStream(sfile);
@@ -222,6 +229,99 @@ public class Main implements Serializable
                                                 }
                                             }
                                             break;
+                                        case 3:
+                                            System.out.println("Please Enter Roll Number of Student you want to set marks for : ");
+                                            int studentid = sc.nextInt();
+                                            for (int j=0; j<std_arry.size(); j++) {
+
+                                                if (studentid == std_arry.get(j).getID()) {
+
+                                                    System.out.println("Student Found!!");
+                                                    boolean validation = false;
+                                                    while (true) {
+                                                        System.out.println("---Marks----");
+                                                        System.out.println("Input marks of Assignment 1 (Max:5)");
+                                                        double ass1 = sc.nextDouble();
+                                                        System.out.println("Input marks of Assignment 2 (Max:5)");
+                                                        double ass2 = sc.nextDouble();
+                                                        System.out.println("Input marks of quiz 1 (Max:5)");
+                                                        double quiz1 = sc.nextDouble();
+                                                        System.out.println("Input marks of quiz 2 (Max:5)");
+                                                        double quiz2 = sc.nextDouble();
+                                                        System.out.println("Input marks of Mid 1 (Max:15)");
+                                                        double mid1 = sc.nextDouble();
+                                                        System.out.println("Input marks of Mid 2 (Max:15)");
+                                                        double mid2 = sc.nextDouble();
+                                                        System.out.println("Input marks of Final Exam (Max:50)");
+                                                        double f = sc.nextDouble();
+                                                        if (ass1 <=5 || ass2 <=5 || quiz1 <=5 || quiz2 <=5 || mid1 <=15 || mid2 <=15 || f <=50) {
+                                                            validation = true;
+
+                                                        }
+                                                        if(validation == true){
+                                                            coursemarks.add(new GPA(ass1, ass2, quiz1, quiz2, mid1, mid2, f));
+                                                            break;
+                                                        }
+                                                        else System.out.println("Marks of one or more components is invalid , please input again");
+                                                    }
+                                                    System.out.println("---------------");
+                                                    System.out.println("GPA Calculator.......");
+                                                    for(int z = 0;z<coursemarks.size();z++){
+                                                        GPA g1 =  coursemarks.get(z);
+                                                        System.out.println("Total Marks: "+g1.totalmarks());
+                                                        if (g1.totalmarks()>86){
+                                                            g1.grade = "A+";
+                                                            g1.gpa = 4;
+                                                        }
+                                                        else if(g1.totalmarks()==86){
+                                                            g1.grade = "A";
+                                                            g1.gpa = 4;
+                                                        }
+                                                        else if(g1.totalmarks()>=82 && g1.totalmarks()<86){
+                                                            g1.grade = "A-";
+                                                            g1.gpa = 3.67;
+                                                        }
+                                                        else if(g1.totalmarks()>=78 && g1.totalmarks()<82){
+                                                            g1.grade = "B+";
+                                                            g1.gpa = 3.33;
+                                                        }
+                                                        else if(g1.totalmarks()>=74 && g1.totalmarks()<78){
+                                                            g1.grade = "B";
+                                                            g1.gpa = 3.00;
+                                                        }
+                                                        else if(g1.totalmarks()>=70 && g1.totalmarks()<74){
+                                                            g1.grade = "B-";
+                                                            g1.gpa = 2.67;
+                                                        }
+                                                        else if(g1.totalmarks()>=66 && g1.totalmarks()<70){
+                                                            g1.grade = "C+";
+                                                            g1.gpa = 2.33;
+                                                        }
+                                                        else if(g1.totalmarks()>=62 && g1.totalmarks()<66){
+                                                            g1.grade = "C";
+                                                            g1.gpa = 2;
+                                                        }
+                                                        else if(g1.totalmarks()>=58 && g1.totalmarks()<62){
+                                                            g1.grade = "C-";
+                                                            g1.gpa = 1.67;
+                                                        }
+                                                        else if(g1.totalmarks()>=54 && g1.totalmarks()<58){
+                                                            g1.grade = "D";
+                                                            g1.gpa = 1.33;
+                                                        }
+                                                        else{
+                                                            g1.grade = "F";
+                                                            g1.gpa = 1;
+                                                        }
+                                                        System.out.println("Grade: "+g1.grade);
+                                                        System.out.println("GPA: "+g1.gpa);
+                                                    }
+                                                }
+                                                else System.out.println("Student ID invalid or not Found!");
+                                            }
+
+                                            break;
+
                                         case 5:
                                             System.out.println("Saving changes before logging out...");
                                             FileOutputStream tfos = new FileOutputStream(tfile);
@@ -432,7 +532,7 @@ public class Main implements Serializable
                                             System.out.println("Enter correct choice!");
                                     }
                                 }
-                            break;
+                                break;
                             case 4:
                                 sc.nextLine();
                                 //Assigning Courses to Teachers
@@ -449,7 +549,7 @@ public class Main implements Serializable
                                     System.out.println("Note: only one course can be assigned to the teacher!");
                                     System.out.print("Enter email of Teacher: ");
                                     String t_email = sc.next();
-                                    Teacher tmptch = tch_arry.get(b);
+                                    tmptch = tch_arry.get(b);
                                     while (!found)
                                     {
                                         if (t_email.equals(tch_arry.get(i).getEmail()))
@@ -516,6 +616,7 @@ public class Main implements Serializable
                                 //Assigning Courses to Students
                                 System.out.println("Note: The Max Credit Hour Limit is 10");
                                 int totalhrs = 0;
+                                char more = 'y';
                                 System.out.println("-----------------------");
                                 System.out.print("Enter email of student to assign course: ");
                                 String std_email = sc.next();
@@ -536,7 +637,7 @@ public class Main implements Serializable
                                             Course course = createdCourses.get(y);
                                             course.display();
                                         }
-                                        while (totalhrs <10)
+                                        while (totalhrs <10 && (more == 'y' || more == 'Y'))
                                         {
                                             System.out.print("Select a course from above: ");
                                             String course_title = sc.next();
@@ -560,6 +661,8 @@ public class Main implements Serializable
                                             {
                                                 System.out.println("Invalid course name/course not found");
                                             }
+                                            System.out.println("Do you want to assign another course? y/n");
+                                            more = sc.next().charAt(0);
                                         }
                                         if(totalhrs == 10)
                                         {
