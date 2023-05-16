@@ -5,6 +5,9 @@ class Student extends BasicInfo implements Serializable
 {
     Attendence std_attendence = new Attendence();
     ArrayList<Course> CoursesToStudy = new ArrayList<>();
+    Acedemics std_acdem = new Acedemics();
+    ArrayList<String> CourseFeedback = new ArrayList<>();
+
 
     public Student(String fname, String lname, String email, String password, int ID, String address, String dept)
     {
@@ -14,6 +17,7 @@ class Student extends BasicInfo implements Serializable
     @Override
     void display()
     {
+        System.out.println("\n--- Student details ---");
         System.out.println("Name: " + ( super.getFname() + " " + super.getLname() ));
         System.out.println("Email: " + super.getEmail());
         System.out.println("ID: " + super.getID());

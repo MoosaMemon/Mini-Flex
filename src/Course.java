@@ -15,6 +15,7 @@ class Course implements Serializable
 
     public void display()
     {
+        System.out.println("\n--- Course details ---");
         System.out.println("Course name: " + this.course_name);
         System.out.println("Course code: " + this.coursecode);
         System.out.println("Credit hours: " + this.hrs);

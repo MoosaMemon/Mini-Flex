@@ -16,10 +16,12 @@ class Teacher extends BasicInfo implements Serializable
     @Override
     void display()
     {
+        System.out.println("\n--- Teacher details ---");
         System.out.println("First name: " + super.getFname());
         System.out.println("Last name: " + super.getLname());
         System.out.println("Email: " + super.getEmail());
         System.out.println("Teacher ID: " + super.getID());
         System.out.println("Department: " + super.getDept());
+        System.out.println("Assigned Course: " + this.AssignedCourse.course_name);
     }
 }

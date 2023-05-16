@@ -6,7 +6,7 @@ abstract class BasicInfo implements Serializable
     private String lname;
     private String email;
     private String password;
-    protected int ID;
+    private int ID;
     private String address;
     private String dept;
 

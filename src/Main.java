@@ -14,7 +14,7 @@ public class Main implements Serializable
         ArrayList<Student> std_arry = new ArrayList<Student>();
         ArrayList<Teacher> tch_arry = new ArrayList<Teacher>();
         ArrayList<Course> createdCourses = new ArrayList<Course>();
-        ArrayList<GPA>   coursemarks = new ArrayList<>();
+
         Teacher tmptch = null;
 
         if(sfile.exists())
@@ -59,7 +59,7 @@ public class Main implements Serializable
 
         while (true)
         {
-            System.out.println("---MAIN MENU---\n");
+            System.out.println("\n--- HOME PAGE ---\n");
             System.out.print("1 - Login as student\n2 - Login as teacher\n3 - Login as admin\n4 - Exit\nEnter choice: ");
             int choice = sc.nextInt();
 
@@ -69,11 +69,16 @@ public class Main implements Serializable
                     // STUDENT LOGIN
                     if(!sfile.exists())
                     {
-                        System.out.println("Failed to proceed! Register a student first.");
+                        System.out.println("\nFailed to proceed! Register a student first.");
+                        break;
+                    }
+                    if(!cfile.exists())
+                    {
+                        System.out.println("\nFailed to proceed! Enroll in a course first!");
                         break;
                     }
 
-                    System.out.print("Enter your email: ");
+                    System.out.print("\nEnter your email: ");
                     email = sc.next();
                     System.out.print("Enter your password: ");
                     password = sc.next();
@@ -85,16 +90,16 @@ public class Main implements Serializable
                             if(password.equals(std_arry.get(b).getPassword()))
                             {
                                 slogstatus = true;
-                                System.out.println("Login successful as student!");
+                                System.out.println("\nLogin successful as student!");
                                 System.out.println("NOTE: MAKE SURE TO LOG OUT INORDER TO SAVE ANY MADE CHANGES!!!!!!");
                                 while (slogstatus)
                                 {
-                                    System.out.println("--Student Menu--");
+                                    System.out.println("\n---- STUDENT MENU ----");
                                     System.out.println("1 - View Basic Information");
                                     System.out.println("2 - View Attendance");
                                     System.out.println("3 - View Marks");
                                     System.out.println("4 - GPA");
-                                    System.out.println("5 - Course Feedback");
+                                    System.out.println("5 - Give course feedback");
                                     System.out.println("6 - Log Out");
                                     System.out.print("Enter choice: ");
                                     int ch2 = sc.nextInt();
@@ -111,27 +116,53 @@ public class Main implements Serializable
                                             // View Attendence
                                             boolean attflag = false;
                                             sc.nextLine();
-                                            System.out.print("Enter course name to view attendance of: ");
+                                            System.out.print("\nEnter course name to view attendance of: ");
                                             String ch9 = sc.nextLine();
 
-                                            System.out.println(std_arry.get(b).std_attendence.tcrse.size());
+//                                            System.out.println(std_arry.get(b).std_attendence.tcrse.size());
                                             for(int g=0; g<std_arry.get(b).std_attendence.tcrse.size(); g++)
                                             {
                                                 if(std_arry.get(b).std_attendence.tcrse.get(g).course_name.trim().equalsIgnoreCase(ch9.trim()))
                                                 {
-                                                    System.out.println("Attendance marked for: " + std_arry.get(b).std_attendence.tcrse.get(g).course_name);
+                                                    System.out.println("\nAttendance marked for: " + std_arry.get(b).std_attendence.tcrse.get(g).course_name);
                                                     std_arry.get(b).std_attendence.time.get(g).display();
-                                                    System.out.println("\n");
                                                 }
                                             }
                                             break;
                                         case 3:
-                                            System.out.println("-----Marks------");
+                                            sc.nextLine();
+                                            System.out.print("\nEnter the course name to view marks of: ");
+                                            String tcrs = sc.nextLine();
+
+                                            for(int f=0;f<std_arry.get(b).std_acdem.CourseDetails.size(); f++)
+                                            {
+                                                if(std_arry.get(b).std_acdem.CourseDetails.get(f).course_name.trim().equalsIgnoreCase(tcrs.trim()))
+                                                {
+                                                    System.out.println("Transcript for course: " + std_arry.get(b).std_acdem.CourseDetails.get(f).course_name);
+                                                    std_arry.get(b).std_acdem.CourseMarks.get(f).display();
+                                                }
+                                            }
                                             break;
-
-
+                                        case 4:
+                                            break;
+                                        case 5:
+                                            System.out.print("\nEnter course name to give feedback of: ");
+                                            String cnn = sc.next();
+                                            for(int d=0; d<std_arry.get(b).CoursesToStudy.size(); d++)
+                                            {
+                                                if(std_arry.get(b).CoursesToStudy.get(d).course_name.trim().equalsIgnoreCase(cnn.trim()))
+                                                {
+                                                    sc.nextLine();
+                                                    System.out.print("\nEnter course feedback: ");
+                                                    String tmpfdbk = sc.nextLine();
+                                                    std_arry.get(b).CourseFeedback.add(tmpfdbk);
+                                                    System.out.println("Successfully given course feedback!!");
+                                                    break;
+                                                }
+                                            }
+                                            break;
                                         case 6:
-                                            System.out.println("Saving changes before logging out...");
+                                            System.out.println("\nSaving changes before logging out...");
                                             FileOutputStream sfos = new FileOutputStream(sfile);
                                             ObjectOutputStream soos = new ObjectOutputStream(sfos);
                                             soos.writeObject(std_arry);
@@ -141,7 +172,7 @@ public class Main implements Serializable
                                             System.out.println("Successfully logged out!!");
                                             break;
                                         default:
-                                            System.out.println("Enter correct choice!");
+                                            System.out.println("Enter correct choice!!\n");
                                             break;
                                     }
                                 }
@@ -157,11 +188,16 @@ public class Main implements Serializable
                     // TEACHER LOGIN
                     if(!tfile.exists())
                     {
-                        System.out.println("Failed to proceed! Register a teacher first.");
+                        System.out.println("\nFailed to proceed! Register a teacher first.");
+                        break;
+                    }
+                    if(!cfile.exists())
+                    {
+                        System.out.println("\nFailed to proceed! Get assigned a course first!");
                         break;
                     }
 
-                    System.out.print("Enter your email: ");
+                    System.out.print("\nEnter your email: ");
                     email = sc.next();
                     System.out.print("Enter your password: ");
                     password = sc.next();
@@ -173,11 +209,11 @@ public class Main implements Serializable
                             if(password.equals(tch_arry.get(d).getPassword()))
                             {
                                 tloginstatus = true;
-                                System.out.println("Login successful as teacher!");
+                                System.out.println("\nLogin successful as teacher!");
                                 System.out.println("NOTE: MAKE SURE TO LOG OUT INORDER TO SAVE ANY MADE CHANGES!!!!!!");
                                 while (tloginstatus)
                                 {
-                                    System.out.println("--Teacher Menu--");
+                                    System.out.println("\n---- TEACHER MENU ----");
                                     System.out.println("1 - View Basic Information");
                                     System.out.println("2 - Set Attendance");
                                     System.out.println("3 - Set Marks");
@@ -197,7 +233,7 @@ public class Main implements Serializable
                                             break;
                                         case 2:
                                             //Set Attendance
-                                            System.out.print("Enter ID of student to set attendance for: ");
+                                            System.out.print("\nEnter ID of student to set attendance for: ");
                                             int stdid = sc.nextInt();
 
                                             //Searching for ID
@@ -210,7 +246,7 @@ public class Main implements Serializable
                                                 }
                                                 if (stdid == std_arry.get(j).getID())
                                                 {
-                                                    System.out.println("Student Found!!");
+//                                                    System.out.println("\nStudent Found!!");
                                                     for(int x=0; x<std_arry.get(j).CoursesToStudy.size(); x++)
                                                     {
                                                         if(std_arry.get(j).CoursesToStudy.get(x).course_name.equalsIgnoreCase(tch_arry.get(d).AssignedCourse.course_name))
@@ -230,100 +266,135 @@ public class Main implements Serializable
                                             }
                                             break;
                                         case 3:
-                                            System.out.println("Please Enter Roll Number of Student you want to set marks for : ");
+                                            System.out.print("\nEnter roll number of student to set marks for: ");
                                             int studentid = sc.nextInt();
-                                            for (int j=0; j<std_arry.size(); j++) {
-
-                                                if (studentid == std_arry.get(j).getID()) {
-
-                                                    System.out.println("Student Found!!");
+                                            for (int j=0; j<std_arry.size(); j++)
+                                            {
+                                                if (studentid == std_arry.get(j).getID())
+                                                {
+//                                                    System.out.println("Student Found!!");
                                                     boolean validation = false;
-                                                    while (true) {
-                                                        System.out.println("---Marks----");
-                                                        System.out.println("Input marks of Assignment 1 (Max:5)");
+                                                    while (true)
+                                                    {
+                                                        System.out.println("\n---Assign marks----");
+                                                        System.out.print("Input marks of assignment-1 (Max:5): ");
                                                         double ass1 = sc.nextDouble();
-                                                        System.out.println("Input marks of Assignment 2 (Max:5)");
+                                                        System.out.print("Input marks of assignment-2 (Max:5): ");
                                                         double ass2 = sc.nextDouble();
-                                                        System.out.println("Input marks of quiz 1 (Max:5)");
+                                                        System.out.print("Input marks of quiz-1 (Max:5): ");
                                                         double quiz1 = sc.nextDouble();
-                                                        System.out.println("Input marks of quiz 2 (Max:5)");
+                                                        System.out.print("Input marks of quiz-2 (Max:5): ");
                                                         double quiz2 = sc.nextDouble();
-                                                        System.out.println("Input marks of Mid 1 (Max:15)");
+                                                        System.out.print("Input marks of mid-1 (Max:15): ");
                                                         double mid1 = sc.nextDouble();
-                                                        System.out.println("Input marks of Mid 2 (Max:15)");
+                                                        System.out.print("Input marks of mid-2 (Max:15): ");
                                                         double mid2 = sc.nextDouble();
-                                                        System.out.println("Input marks of Final Exam (Max:50)");
+                                                        System.out.print("Input marks of final exam (Max:50): ");
                                                         double f = sc.nextDouble();
-                                                        if (ass1 <=5 || ass2 <=5 || quiz1 <=5 || quiz2 <=5 || mid1 <=15 || mid2 <=15 || f <=50) {
+                                                        if (ass1 <=5 || ass2 <=5 || quiz1 <=5 || quiz2 <=5 || mid1 <=15 || mid2 <=15 || f <=50)
+                                                        {
                                                             validation = true;
 
                                                         }
-                                                        if(validation == true){
-                                                            coursemarks.add(new GPA(ass1, ass2, quiz1, quiz2, mid1, mid2, f));
+                                                        if(validation == true)
+                                                        {
+                                                            std_arry.get(j).std_acdem.CourseMarks.add(new GPA(ass1, ass2, quiz1, quiz2, mid1, mid2, f));
+                                                            std_arry.get(j).std_acdem.CourseDetails.add(tch_arry.get(d).AssignedCourse);
                                                             break;
                                                         }
-                                                        else System.out.println("Marks of one or more components is invalid , please input again");
+                                                        else
+                                                        {
+                                                            System.out.println("Marks of one or more components is invalid, please input again!\n");
+                                                        }
                                                     }
-                                                    System.out.println("---------------");
-                                                    System.out.println("GPA Calculator.......");
-                                                    for(int z = 0;z<coursemarks.size();z++){
-                                                        GPA g1 =  coursemarks.get(z);
-                                                        System.out.println("Total Marks: "+g1.totalmarks());
-                                                        if (g1.totalmarks()>86){
+                                                    System.out.println("----------------------------");
+                                                    System.out.println("\nAssigning GPA and marks...");
+                                                    for(int z = 0;z<std_arry.get(j).std_acdem.CourseMarks.size();z++)
+                                                    {
+                                                        GPA g1 = std_arry.get(j).std_acdem.CourseMarks.get(z);
+                                                        if (g1.totalmarks()>86)
+                                                        {
                                                             g1.grade = "A+";
                                                             g1.gpa = 4;
                                                         }
-                                                        else if(g1.totalmarks()==86){
+                                                        else if(g1.totalmarks()==86)
+                                                        {
                                                             g1.grade = "A";
                                                             g1.gpa = 4;
                                                         }
-                                                        else if(g1.totalmarks()>=82 && g1.totalmarks()<86){
+                                                        else if(g1.totalmarks()>=82 && g1.totalmarks()<86)
+                                                        {
                                                             g1.grade = "A-";
                                                             g1.gpa = 3.67;
                                                         }
-                                                        else if(g1.totalmarks()>=78 && g1.totalmarks()<82){
+                                                        else if(g1.totalmarks()>=78 && g1.totalmarks()<82)
+                                                        {
                                                             g1.grade = "B+";
                                                             g1.gpa = 3.33;
                                                         }
-                                                        else if(g1.totalmarks()>=74 && g1.totalmarks()<78){
+                                                        else if(g1.totalmarks()>=74 && g1.totalmarks()<78)
+                                                        {
                                                             g1.grade = "B";
                                                             g1.gpa = 3.00;
                                                         }
-                                                        else if(g1.totalmarks()>=70 && g1.totalmarks()<74){
+                                                        else if(g1.totalmarks()>=70 && g1.totalmarks()<74)
+                                                        {
                                                             g1.grade = "B-";
                                                             g1.gpa = 2.67;
                                                         }
-                                                        else if(g1.totalmarks()>=66 && g1.totalmarks()<70){
+                                                        else if(g1.totalmarks()>=66 && g1.totalmarks()<70)
+                                                        {
                                                             g1.grade = "C+";
                                                             g1.gpa = 2.33;
                                                         }
-                                                        else if(g1.totalmarks()>=62 && g1.totalmarks()<66){
+                                                        else if(g1.totalmarks()>=62 && g1.totalmarks()<66)
+                                                        {
                                                             g1.grade = "C";
                                                             g1.gpa = 2;
                                                         }
-                                                        else if(g1.totalmarks()>=58 && g1.totalmarks()<62){
+                                                        else if(g1.totalmarks()>=58 && g1.totalmarks()<62)
+                                                        {
                                                             g1.grade = "C-";
                                                             g1.gpa = 1.67;
                                                         }
-                                                        else if(g1.totalmarks()>=54 && g1.totalmarks()<58){
+                                                        else if(g1.totalmarks()>=54 && g1.totalmarks()<58)
+                                                        {
                                                             g1.grade = "D";
                                                             g1.gpa = 1.33;
                                                         }
-                                                        else{
+                                                        else
+                                                        {
                                                             g1.grade = "F";
                                                             g1.gpa = 1;
                                                         }
-                                                        System.out.println("Grade: "+g1.grade);
-                                                        System.out.println("GPA: "+g1.gpa);
+                                                        System.out.println("Successfully assigned GPA and marks. ");
                                                     }
                                                 }
-                                                else System.out.println("Student ID invalid or not Found!");
+                                                else
+                                                {
+                                                    System.out.println("\nStudent not Found/invalid ID!\n");
+                                                }
                                             }
-
                                             break;
-
+                                        case 4:
+                                            System.out.print("\nEnter roll number of the student to view feedback of: ");
+                                            int rnn = sc.nextInt();
+                                            for(int k=0;k<std_arry.size(); k++)
+                                            {
+                                                if(rnn == std_arry.get(k).getID())
+                                                {
+                                                    for(int f=0; f<std_arry.get(k).CoursesToStudy.size(); f++)
+                                                    {
+                                                        if(tch_arry.get(d).AssignedCourse.course_name.trim().equalsIgnoreCase(std_arry.get(k).CoursesToStudy.get(f).course_name.trim()))
+                                                        {
+                                                            System.out.println("\nFeedback: " + std_arry.get(k).CourseFeedback.get(f));
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            break;
                                         case 5:
-                                            System.out.println("Saving changes before logging out...");
+                                            System.out.println("\nSaving changes before logging out...");
                                             FileOutputStream tfos = new FileOutputStream(tfile);
                                             ObjectOutputStream toos = new ObjectOutputStream(tfos);
                                             toos.writeObject(tch_arry);
@@ -333,7 +404,7 @@ public class Main implements Serializable
                                             System.out.println("Successfully logged out!!");
                                             break;
                                         default:
-                                            System.out.println("Enter correct choice!");
+                                            System.out.println("Enter correct choice!\n");
                                             break;
                                     }
                                 }
@@ -345,20 +416,39 @@ public class Main implements Serializable
                         }
                     }
                     break;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 case 3:
                     // ADMIN LOGIN
                     aloginstatus = true;
                     while (aloginstatus)
                     {
-                        System.out.println("NOTE: MAKE SURE TO LOG-OUT INORDER TO SAVE ANY MADE CHANGES!!!!!!");
-                        System.out.print("1 - Register Student\n2 - Register Teacher\n3 - Set Courses + Credit Hours\n4 - Assign Course to Teacher\n5 - Assign Courses to Student\n6 - Logout\nEnter choice: ");
+                        System.out.println("\nNOTE: MAKE SURE TO LOG-OUT INORDER TO SAVE ANY MADE CHANGES!!!!!!");
+                        System.out.println("---- MAIN MENU OF ADMIN PANEL ----");
+                        System.out.print("\n1 - Register Student\n2 - Register Teacher\n3 - Set Courses + Credit Hours\n4 - Assign Course to Teacher\n5 - Assign Courses to Student\n6 - Logout\nEnter choice: ");
                         choice = sc.nextInt();
                         switch (choice)
                         {
                             case 1:
                                 // Register Student
                                 sc.nextLine();
-                                System.out.print("Enter first name of student: ");
+                                System.out.print("\nEnter first name of student: ");
                                 String fname = sc.nextLine();
                                 System.out.print("Enter last name of student: ");
                                 String lname = sc.nextLine();
@@ -368,7 +458,7 @@ public class Main implements Serializable
                                 email = sc.nextLine();
                                 System.out.print("Enter password for student: ");
                                 password = sc.nextLine();
-                                System.out.println("Enter department for student: ");
+                                System.out.print("Enter department for student: ");
                                 String dep = sc.nextLine();
                                 System.out.print("Enter ID for student: ");
                                 int id = sc.nextInt();
@@ -384,7 +474,7 @@ public class Main implements Serializable
                                 }
                                 else
                                 {
-                                    System.out.println("Creating a new file");
+//                                    System.out.println("\nCreating a new file!");
                                     sfile.createNewFile();
                                 }
 
@@ -395,12 +485,12 @@ public class Main implements Serializable
                                 soos.writeObject(std_arry);
                                 soos.close();
                                 sfos.close();
-                                System.out.println("Successfully registered student!");
+                                System.out.println("\nSuccessfully registered student!");
                                 break;
                             case 2:
                                 // Register Teacher
                                 sc.nextLine();
-                                System.out.print("Enter first name of teacher: ");
+                                System.out.print("\nEnter first name of teacher: ");
                                 fname = sc.next();
                                 System.out.print("Enter last name of teacher: ");
                                 lname = sc.next();
@@ -409,6 +499,7 @@ public class Main implements Serializable
                                 address = sc.nextLine();
                                 System.out.print("Enter email for teacher: ");
                                 email = sc.next();
+                                sc.nextLine();
                                 System.out.print("Enter password for teacher: ");
                                 password = sc.next();
                                 System.out.print("Enter ID for teacher: ");
@@ -427,7 +518,7 @@ public class Main implements Serializable
                                 }
                                 else
                                 {
-                                    System.out.println("Creating a new file");
+                                    System.out.println("\nCreating a new file");
                                     sfile.createNewFile();
                                 }
 
@@ -438,7 +529,7 @@ public class Main implements Serializable
                                 toos.writeObject(tch_arry);
                                 toos.close();
                                 tfos.close();
-                                System.out.println("Successfully registered teacher!");
+                                System.out.println("\nSuccessfully registered teacher!");
                                 break;
                             case 3:
                                 // CREATE COURSES + CREDIT HOURS
@@ -446,12 +537,11 @@ public class Main implements Serializable
 //                                sc.nextLine();
                                 while (!tmp)
                                 {
-                                    System.out.println("--Courses Menu--");
-                                    System.out.println("---------------------------------");
-                                    System.out.println("1 - Add Courses");
+                                    System.out.println("\n---- Courses Menu ----");
+                                    System.out.println("\n1 - Add Courses");
                                     System.out.println("2 - Delete Courses");
                                     System.out.println("3 - View Courses");
-                                    System.out.println("4 - Go Back to Main Menu");
+                                    System.out.println("4 - Previous menu");
                                     System.out.print("Enter choice: ");
                                     int opt = sc.nextInt();
 
@@ -459,7 +549,7 @@ public class Main implements Serializable
                                     {
                                         case 1:
                                             sc.nextLine();
-                                            System.out.print("Enter course name: ");
+                                            System.out.print("\nEnter course name: ");
                                             String cname = sc.nextLine();
                                             System.out.print("Enter course credit hours: ");
                                             int hours = sc.nextInt();
@@ -489,14 +579,20 @@ public class Main implements Serializable
                                             coos.writeObject(createdCourses);
                                             coos.close();
                                             cfos.close();
-                                            System.out.println("Successfully registered course!");
+                                            System.out.println("\nSuccessfully registered course!");
                                             break;
                                         case 2:
+                                            if(!cfile.exists())
+                                            {
+                                                System.out.println("\nRegister a course first!!");
+                                                break;
+                                            }
                                             sc.nextLine();
                                             boolean found = false;
+                                            boolean notfound = true;
                                             while (!found)
                                             {
-                                                System.out.print("Enter name of course to delete: ");
+                                                System.out.print("\nEnter name of course to delete: ");
                                                 String cn = sc.next();
                                                 for (int b=0; b<createdCourses.size(); b++)
                                                 {
@@ -504,24 +600,35 @@ public class Main implements Serializable
                                                     if (cn.equals(tmpcourse.course_name))
                                                     {
                                                         createdCourses.remove(b);
-                                                        System.out.println("Course removed successfully!!");
+                                                        System.out.println("\nCourse removed successfully!!");
                                                         found = true;
                                                         break;
                                                     }
                                                     else
                                                     {
-                                                        System.out.println("Course name invalid/course not found!");
+                                                        System.out.println("\nCourse name invalid/course not found!");
+                                                        notfound = false;
+                                                        break;
                                                     }
+                                                }
+                                                if(!notfound)
+                                                {
+                                                    break;
                                                 }
                                             }
                                             break;
                                         case 3:
-                                            System.out.println("--The Courses--");
-                                            System.out.println("                ");
+                                            if(!cfile.exists())
+                                            {
+                                                System.out.println("\nRegister a course first!!");
+                                                break;
+                                            }
+                                            System.out.println("\n---- Registered courses ----");
                                             for (int z=0; z<createdCourses.size(); z++)
                                             {
                                                 Course course = createdCourses.get(z);
                                                 course.display();
+                                                System.out.print("----------------\n");
                                             }
                                             break;
                                         case 4:
@@ -529,16 +636,21 @@ public class Main implements Serializable
                                             // going back to previous menu
                                             break;
                                         default:
-                                            System.out.println("Enter correct choice!");
+                                            System.out.println("\nEnter correct choice!\n");
                                     }
                                 }
                                 break;
                             case 4:
-                                sc.nextLine();
                                 //Assigning Courses to Teachers
+                                sc.nextLine();
                                 if(!cfile.exists())
                                 {
-                                    System.out.println("Failed to proceed! Register a course first.");
+                                    System.out.println("\nFailed to proceed! Register a course first.");
+                                    break;
+                                }
+                                if(!tfile.exists())
+                                {
+                                    System.out.println("\nFailed to proceed! Register a teacher first.");
                                     break;
                                 }
 
@@ -548,37 +660,26 @@ public class Main implements Serializable
                                 {
                                     System.out.println("Note: only one course can be assigned to the teacher!");
                                     System.out.print("Enter email of Teacher: ");
-                                    String t_email = sc.next();
-                                    tmptch = tch_arry.get(b);
+                                    String tmpemail = sc.next();
                                     while (!found)
                                     {
-                                        if (t_email.equals(tch_arry.get(i).getEmail()))
+                                        if (tmpemail.equals(tch_arry.get(b).getEmail()))
                                         {
                                             found = true;
-                                            System.out.println("Teacher Details:");
-                                            tmptch.display();
 
-                                            if (tmptch.tcourse_assigned_status == false)
+                                            if (!tch_arry.get(b).tcourse_assigned_status)
                                             {
-                                                System.out.println("---- Course List ----");
-                                                for (int z=0; z<createdCourses.size(); z++)
-                                                {
-                                                    Course tmpcrse = createdCourses.get(z);
-                                                    System.out.println(tmpcrse.course_name);
-                                                }
-                                                System.out.println("------------------");
-                                                System.out.println("Select any one course from above: ");
+                                                System.out.print("Enter course name to assign: ");
                                                 String coursename = sc.next();
 
                                                 boolean found1 = false;
-                                                for (int s = 0; s < createdCourses.size(); s++)
+                                                for (int s=0; s<createdCourses.size(); s++)
                                                 {
-                                                    Course tmpc = createdCourses.get(s);
-                                                    if (coursename.equals(tmpc.course_name))
+                                                    if (coursename.trim().equalsIgnoreCase(createdCourses.get(s).course_name.trim()))
                                                     {
-                                                        tmptch.tcourse_assigned_status = true;
+                                                        tch_arry.get(b).tcourse_assigned_status = true;
                                                         //look into this later if it donesn't work
-                                                        tmptch.AssignedCourse = createdCourses.get(s);
+                                                        tch_arry.get(b).AssignedCourse = createdCourses.get(s);
                                                         found1 = true;
                                                         break;
                                                     }
@@ -586,10 +687,12 @@ public class Main implements Serializable
                                                 if (found1)
                                                 {
                                                     System.out.println("Course assigned successfully");
+                                                    break;
                                                 }
                                                 else
                                                 {
                                                     System.out.println("Course name invalid/course not available at the moment");
+                                                    break;
                                                 }
                                             }
                                             else
@@ -603,105 +706,103 @@ public class Main implements Serializable
                                             break;
                                         }
                                     }
+                                    if(found)
+                                    {
+                                        break;
+                                    }
                                 }
                                 break;
                             case 5:
+                                //Assigning Courses to Students
                                 sc.nextLine();
                                 if(!cfile.exists())
                                 {
                                     System.out.println("Failed to proceed! Register a course first.");
                                     break;
                                 }
+                                if(!sfile.exists())
+                                {
+                                    System.out.println("\nFailed to proceed! Register a student first.");
+                                    break;
+                                }
 
-                                //Assigning Courses to Students
-                                System.out.println("Note: The Max Credit Hour Limit is 10");
-                                int totalhrs = 0;
-                                char more = 'y';
-                                System.out.println("-----------------------");
-                                System.out.print("Enter email of student to assign course: ");
+                                System.out.print("\nEnter email of student to assign course: ");
                                 String std_email = sc.next();
 
                                 //Checking if Student exists
                                 boolean f1 = false;
+                                boolean found22 = false;
                                 for (int z=0; z<std_arry.size(); z++)
                                 {
-                                    Student tmps = std_arry.get(z);
-                                    if (std_email.equals(tmps.getEmail()))
+                                    if (std_email.trim().equalsIgnoreCase(std_arry.get(z).getEmail().trim()))
                                     {
                                         f1 = true;
-                                        System.out.println("Student Details");
-                                        tmps.display();
                                         System.out.println("------The Course List--------");
                                         for (int y=0; y<createdCourses.size(); y++)
                                         {
-                                            Course course = createdCourses.get(y);
-                                            course.display();
+                                            createdCourses.get(y).display();
+                                            System.out.println();
                                         }
-                                        while (totalhrs <10 && (more == 'y' || more == 'Y'))
+                                        System.out.println("---------------------");
+
+                                        System.out.print("Select a course from above: ");
+                                        String course_title = sc.next();
+
+                                        for (int s=0; s<createdCourses.size(); s++)
                                         {
-                                            System.out.print("Select a course from above: ");
-                                            String course_title = sc.next();
-                                            boolean found22 = false;
-                                            for (int s = 0; s < createdCourses.size(); s++)
+                                            if (course_title.trim().equalsIgnoreCase(createdCourses.get(s).course_name.trim()))
                                             {
-                                                Course course = createdCourses.get(s);
-                                                if (course_title.equals(course.course_name))
-                                                {
-                                                    totalhrs += course.hrs;
-                                                    std_arry.get(z).CoursesToStudy.add(createdCourses.get(s));
-                                                    found22 = true;
-                                                    break;
-                                                }
-                                            }
-                                            if (found22)
-                                            {
+                                                std_arry.get(z).CoursesToStudy.add(createdCourses.get(s));
+                                                found22 = true;
                                                 System.out.println("Course assigned successfully");
+                                                break;
                                             }
                                             else
                                             {
                                                 System.out.println("Invalid course name/course not found");
+                                                found22 = false;
+                                                break;
                                             }
-                                            System.out.println("Do you want to assign another course? y/n");
-                                            more = sc.next().charAt(0);
-                                        }
-                                        if(totalhrs == 10)
-                                        {
-                                            System.out.println("Max Credit Hour Limit(10) Reached");
-                                        }
-                                        else
-                                        {
-                                            System.out.println("Assign more courses adding upto 10 credit hours!");
                                         }
                                     }
-                                }
-                                if (!f1)
-                                {
-                                    System.out.println("Student not Registered or not found");
+                                    if(found22)
+                                    {
+                                        break;
+                                    }
                                 }
                                 break;
                             case 6:
                                 System.out.println("Saving changes before logging out...");
 
                                 // saving changes made to students
-                                FileOutputStream sfoss = new FileOutputStream(sfile);
-                                ObjectOutputStream sooss = new ObjectOutputStream(sfoss);
-                                sooss.writeObject(std_arry);
-                                sooss.close();
-                                sfoss.close();
+                                if(sfile.exists())
+                                {
+                                    FileOutputStream sfoss = new FileOutputStream(sfile);
+                                    ObjectOutputStream sooss = new ObjectOutputStream(sfoss);
+                                    sooss.writeObject(std_arry);
+                                    sooss.close();
+                                    sfoss.close();
+                                }
 
                                 //saving changes made to teachers
-                                FileOutputStream tfoss = new FileOutputStream(tfile);
-                                ObjectOutputStream tooss = new ObjectOutputStream(tfoss);
-                                tooss.writeObject(tch_arry);
-                                tooss.close();
-                                tfoss.close();
+                                if(tfile.exists())
+                                {
+                                    FileOutputStream tfoss = new FileOutputStream(tfile);
+                                    ObjectOutputStream tooss = new ObjectOutputStream(tfoss);
+                                    tooss.writeObject(tch_arry);
+                                    tooss.close();
+                                    tfoss.close();
+                                }
 
                                 // saving changes made to courses
-                                FileOutputStream cfos = new FileOutputStream(cfile);
-                                ObjectOutputStream coos = new ObjectOutputStream(cfos);
-                                coos.writeObject(createdCourses);
-                                coos.close();
-                                cfos.close();
+                                if(cfile.exists())
+                                {
+                                    FileOutputStream cfos = new FileOutputStream(cfile);
+                                    ObjectOutputStream coos = new ObjectOutputStream(cfos);
+                                    coos.writeObject(createdCourses);
+                                    coos.close();
+                                    cfos.close();
+                                }
 
                                 aloginstatus=false;
                                 System.out.println("Successfully logged out");
