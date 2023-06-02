@@ -416,24 +416,6 @@ public class Main implements Serializable
                         }
                     }
                     break;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 case 3:
                     // ADMIN LOGIN
                     aloginstatus = true;
